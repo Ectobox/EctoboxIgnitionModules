@@ -1,0 +1,33 @@
+# Ignition resource files
+.resources/
+*/.resources/
+
+# Gradle build output
+build/
+*/build/
+.gradle/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Node / web-ui
+node_modules/
+**/node_modules/
+yarn-error.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.bak
+
+# OS files
+Thumbs.db
+.DS_Store
+
+.claude/
+.local/
+CertStuff/*.p12
+signing.properties
