@@ -1,3 +1,5 @@
+**⬇ [Download the latest module (v1.0.17)](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Git-For-Designer-8.3.modl)**
+
 Working without source control is like climbing a rock face without a rope.  Doable but when something goes wrong it is going to hurt pretty bad.
 Having to remote into the box Ignition is on or trying to set it up with a trimmed down docker vm can range from inconvient to waking nightmare.  So we built an easy button.
 

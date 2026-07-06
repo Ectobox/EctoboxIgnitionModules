@@ -1,6 +1,8 @@
-# ScriptTide for Ignition 8.3
+# ScripTide for Ignition 8.3
 
-ScriptTide is a free Ignition Designer module that replaces the built-in Script Console with a full-featured script IDE. If you've ever found yourself wishing the Script Console had tabs, autocomplete, or a way to save your work, this is the module for you.
+**⬇ [Download the latest module (v1.0.8)](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Script-IDE-8.3.modl)**
+
+ScripTide is a free Ignition Designer module that replaces the built-in Script Console with a full-featured script IDE. If you've ever found yourself wishing the Script Console had tabs, autocomplete, or a way to save your work, this is the module for you.
 
 It's been built by a small team and shaped largely by feedback from real users. We're genuinely grateful for anyone who takes the time to try it, report an issue, or suggest an improvement.
 
@@ -9,7 +11,7 @@ It's been built by a small team and shaped largely by feedback from real users. 
 ## Table of Contents
 
 - [Installation](#installation)
-- [Opening ScriptTide](#opening-scripttide)
+- [Opening ScripTide](#opening-scriptide)
 - [Editor & Tabs](#editor--tabs)
 - [IntelliSense / Autocomplete](#intellisense--autocomplete)
 - [Output: cprint & jsonPrint](#output-cprint--jsonprint)
@@ -33,13 +35,13 @@ It's been built by a small team and shaped largely by feedback from real users. 
 3. Upload the `.modl` file. On a fresh install you'll be prompted to accept the certificate.
 4. Restart the Designer if it was already open.
 
-No Gateway configuration is required. ScriptTide is a Designer-only module and has no runtime component.
+No Gateway configuration is required. ScripTide is a Designer-only module and has no runtime component.
 
 ---
 
-## Opening ScriptTide
+## Opening ScripTide
 
-Once installed, ScriptTide can be opened two ways:
+Once installed, ScripTide can be opened two ways:
 
 - **Tools menu → Script IDE**
 - **F12** from anywhere in the Designer
@@ -66,7 +68,7 @@ The editor supports full JPython syntax highlighting, bracket matching, and real
 
 ## IntelliSense / Autocomplete
 
-ScriptTide includes completion support for the full Ignition `system.*` API, Python built-ins, your project's script resources, local variables in the current script, snippet triggers, and the IgniTest testing framework.
+ScripTide includes completion support for the full Ignition `system.*` API, Python built-ins, your project's script resources, local variables in the current script, snippet triggers, and the IgniTest testing framework.
 
 Completions are scope-aware — for example, `system.gui.*` functions won't appear when you're running in Gateway scope, and `system.perspective.*` won't appear in a Vision Client context.
 
@@ -78,7 +80,7 @@ Script resource completions work hierarchically. If your project has a script mo
 
 ## Output: cprint & jsonPrint
 
-The output panel supports ANSI color, and ScriptTide ships two helper functions you can use directly in your scripts.
+The output panel supports ANSI color, and ScripTide ships two helper functions you can use directly in your scripts.
 
 ### cprint
 
@@ -121,7 +123,7 @@ Double-click any saved script to load it into the current tab.
 
 ### Version History
 
-Every time you save a script, ScriptTide keeps up to 50 previous versions. You can open the version history for any saved script to browse, preview, and restore earlier versions.
+Every time you save a script, ScripTide keeps up to 50 previous versions. You can open the version history for any saved script to browse, preview, and restore earlier versions.
 
 <img width="824" height="493" alt="image" src="https://github.com/user-attachments/assets/1537742a-0a2a-4507-ae90-0b6309dd7ddd" />
 
@@ -149,7 +151,7 @@ Every script run is logged to the History panel, including the script content, t
 
 ## Tests (IgniTest)
 
-ScriptTide includes a lightweight Python testing framework called **IgniTest**. Test scripts live in the Test Library and can be run directly from ScriptTide.
+ScripTide includes a lightweight Python testing framework called **IgniTest**. Test scripts live in the Test Library and can be run directly from ScripTide.
 
 A basic test file looks like this:
 
@@ -194,7 +196,7 @@ When importing, you can preview what's in the bundle, choose which items to brin
 
 ## Hotkeys
 
-Most actions in ScriptTide have a keyboard shortcut. All shortcuts can be customized from **Settings → Keybindings**.
+Most actions in ScripTide have a keyboard shortcut. All shortcuts can be customized from **Settings → Keybindings**.
 
 | Action | Default |
 |---|---|
@@ -210,7 +212,7 @@ Most actions in ScriptTide have a keyboard shortcut. All shortcuts can be custom
 | Decrease Font Size | Ctrl+- |
 | Reset Font Size | Ctrl+0 |
 
-To rebind a shortcut, double-click the action in the Keybindings dialog and press your new key combination. ScriptTide will warn you if the combination is already in use.
+To rebind a shortcut, double-click the action in the Keybindings dialog and press your new key combination. ScripTide will warn you if the combination is already in use.
 
 <img width="886" height="593" alt="image" src="https://github.com/user-attachments/assets/ac17c63f-e2a6-4851-a2ff-ca2c3a2c9452" />
 
@@ -230,7 +232,7 @@ Font settings are accessed from **Settings → Fonts**.
 
 ## Themes
 
-ScriptTide includes a light theme and a dark theme, and a theme editor that lets you create custom themes by adjusting colors to your liking.
+ScripTide includes a light theme and a dark theme, and a theme editor that lets you create custom themes by adjusting colors to your liking.
 
 > **Note:** The theming system is still being refined and has some rough edges. For now, we'd recommend sticking with the **default light theme** for the most stable experience. The dark theme and custom themes are available to try, but may have visual inconsistencies in some areas. We're actively working on improvements.
 
@@ -240,6 +242,6 @@ ScriptTide includes a light theme and a dark theme, and a theme editor that lets
 
 ## Contributing & Feedback
 
-ScriptTide is a passion project and we really appreciate users taking the time to try it out. If you run into a bug, have a feature suggestion, or just want to share how you're using it, please open an issue on GitHub — it genuinely helps shape where the project goes.
+ScripTide is a passion project and we really appreciate users taking the time to try it out. If you run into a bug, have a feature suggestion, or just want to share how you're using it, please open an issue on GitHub — it genuinely helps shape where the project goes.
 
-Thank you for using ScriptTide.
+Thank you for using ScripTide.

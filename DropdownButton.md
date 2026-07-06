@@ -1,5 +1,7 @@
 # Dropdown Button
 
+**⬇ [Download the latest module (v1.0.1)](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Dropdown-Button-8.3.modl)**
+
 A Bootstrap-style dropdown button for Ignition 8.3 Perspective. A single trigger button (a horizontal ellipsis by default) opens a popup menu of configurable items — ideal for a per-row "more actions" button in a table or grid, where Perspective has no good built-in answer.
 
 ![Sample](https://github.com/user-attachments/assets/dbacde42-5bf7-48c4-b420-f75169c1d78e)

@@ -1,5 +1,7 @@
 # Drag List
 
+**⬇ [Download the latest module (v1.0.8)](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Drag-List-8.3.modl)**
+
 A sortable Perspective list-view component for Ignition 8.3. Like the built-in **Flex Repeater**, you point it at a view and pass an `instances` array to render one view per row — except in Drag List the user can drag rows to reorder them at runtime, and the new order is reported back to your scripts.
 
 ## Install

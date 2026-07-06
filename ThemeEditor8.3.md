@@ -1,5 +1,7 @@
 # Themes Editor
 
+**⬇ [Download the latest module (v1.0.1)](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Themes-Editor-8.3.modl)**
+
 A designer-side editor for Ignition Perspective theme files (CSS/JSON) — no filesystem access required.
 
 ---
