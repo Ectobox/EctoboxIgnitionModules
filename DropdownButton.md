@@ -4,7 +4,7 @@
 
 A Bootstrap-style dropdown button for Ignition 8.3 Perspective. A single trigger button (a horizontal ellipsis by default) opens a popup menu of configurable items — ideal for a per-row "more actions" button in a table or grid, where Perspective has no good built-in answer.
 
-![Sample](https://github.com/user-attachments/assets/dbacde42-5bf7-48c4-b420-f75169c1d78e)
+![Sample](assets/DropdownButton-1.png)
 
 The menu is rendered in a portal with fixed positioning, so it is **never clipped** by a scrolling table, flex container, or coordinate container, and it should flip automatically when there isn't room below the button.
 
@@ -19,7 +19,7 @@ The menu is rendered in a portal with fixed positioning, so it is **never clippe
 1. Drop a **Dropdown Button** onto a view (e.g. into a table column's view, or next to your grid).
 2. In the property editor, click **+** on `items` — a new item is added with defaults, just like adding columns to a table. Set its `text`, optional `icon.path` (e.g. `material/edit`), and a stable `value` (e.g. `"edit"`).
 
-<img width="320" height="755" alt="image" src="https://github.com/user-attachments/assets/03bb7375-6674-4115-a910-452505e4e02d" />
+<img width="320" height="755" alt="image" src="assets/DropdownButton-2.png" />
 
 3. Right-click the component → **Configure Events** → `onItemActionPerformed`, and branch on the payload:
 
@@ -32,7 +32,7 @@ elif event.value == "delete":
     ...
 ```
 
-<img width="1325" height="371" alt="image" src="https://github.com/user-attachments/assets/35b58c4b-bc79-4acb-be46-8976e4d178ce" />
+<img width="1325" height="371" alt="image" src="assets/DropdownButton-3.png" />
 
 
 

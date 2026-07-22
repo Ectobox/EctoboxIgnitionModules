@@ -30,17 +30,17 @@ This module gives you a proper editor right inside the Designer. Browse, open, e
 
 ## Screenshots
 
-<img width="1386" height="893" alt="image" src="https://github.com/user-attachments/assets/801887f3-7cd1-4816-a9ce-a6272bfaf05d" />
+<img width="1386" height="893" alt="image" src="assets/ThemeEditor8.3-1.png" />
 
-<img width="506" height="308" alt="image" src="https://github.com/user-attachments/assets/5376bf81-6e2c-4a29-a1d4-4a343ac26c41" />
+<img width="506" height="308" alt="image" src="assets/ThemeEditor8.3-2.png" />
 
-<img width="448" height="372" alt="image" src="https://github.com/user-attachments/assets/1c38b2bd-3b37-49b6-aa0e-7dcc53d55f6a" />
+<img width="448" height="372" alt="image" src="assets/ThemeEditor8.3-3.png" />
 
-<img width="537" height="394" alt="image" src="https://github.com/user-attachments/assets/b53b870c-15a9-46d5-9158-3ef57f55554f" />
+<img width="537" height="394" alt="image" src="assets/ThemeEditor8.3-4.png" />
 
-<img width="972" height="359" alt="image" src="https://github.com/user-attachments/assets/ea97ae21-6b32-48ea-bbce-517ebf480846" />
+<img width="972" height="359" alt="image" src="assets/ThemeEditor8.3-5.png" />
 
-<img width="390" height="272" alt="image" src="https://github.com/user-attachments/assets/dfa1f89c-1340-4ebd-98ae-ad2d9a21a828" />
+<img width="390" height="272" alt="image" src="assets/ThemeEditor8.3-6.png" />
 
 ---
 

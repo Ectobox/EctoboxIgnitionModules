@@ -18,9 +18,9 @@ All three render into body-level portals, animate in and out, follow the gateway
 and ship **all** their CSS (including `@keyframes`) inside the module — there's nothing to add to a
 project theme.
 
-<img width="361" height="313" alt="msedge_D4GupOsEYW" src="https://github.com/user-attachments/assets/8f58b941-f87c-40e9-bc3e-a67a297a8aef" />
-<img width="339" height="204" alt="image" src="https://github.com/user-attachments/assets/9d1d3054-e243-4004-84c5-9ad864ea0bcd" />
-<img width="403" height="226" alt="image" src="https://github.com/user-attachments/assets/f4c915f8-5663-41ae-b35a-f7cc2f73bf7d" />
+<img width="361" height="313" alt="msedge_D4GupOsEYW" src="assets/Alerts-1.gif" />
+<img width="339" height="204" alt="image" src="assets/Alerts-2.png" />
+<img width="403" height="226" alt="image" src="assets/Alerts-3.png" />
 
 
 ## What's included
@@ -86,7 +86,7 @@ system.ectobox.alerts.ShowToast("Heads up", "Batch finished.", "info", 3000, ses
 | `sessionId` | `str` | current session | Target a specific session (required from gateway scope with no current session). |
 | `pageId` | `str` | all pages | Narrow to one page — see [Scope: session vs. page](#scope-session-vs-page). |
 
-<img width="327" height="224" alt="image" src="https://github.com/user-attachments/assets/8224071b-661b-4904-9958-cc8f155736aa" />
+<img width="327" height="224" alt="image" src="assets/Alerts-4.png" />
 
 
 ## `system.ectobox.alerts.ShowMessageBox`
@@ -115,7 +115,7 @@ if clickedButton == "Delete":
     ...  # do the delete
 ```
 
-<img width="424" height="242" alt="image" src="https://github.com/user-attachments/assets/c983c2b0-5725-4c5d-99e9-c08341012e2e" />
+<img width="424" height="242" alt="image" src="assets/Alerts-5.png" />
 
 
 ## `system.ectobox.alerts.ShowLoading` / `CloseLoading`
@@ -145,9 +145,9 @@ system.ectobox.alerts.ShowLoading("rainbow", "Loading...", dismissible=True)
 **Spinners** (pure CSS/SVG): `smile`, `acrobat`, `arcs`, `blocks`, `fire`, `offtracks`,
 `rainbow`, `twist`.
 
-<img width="461" height="443" alt="msedge_ZutnM3JITS" src="https://github.com/user-attachments/assets/d2d33685-4272-498e-9617-759ec1afb9a1" />
-<img width="252" height="265" alt="msedge_T3T1tjDnqT" src="https://github.com/user-attachments/assets/c647a76e-51b4-41d6-96e1-7e1475831c9c" />
-<img width="288" height="291" alt="msedge_33cIzZnu7E" src="https://github.com/user-attachments/assets/3f0c15c7-d04f-4ad4-a34a-5edd7552a537" />
+<img width="461" height="443" alt="msedge_ZutnM3JITS" src="assets/Alerts-6.gif" />
+<img width="252" height="265" alt="msedge_T3T1tjDnqT" src="assets/Alerts-7.gif" />
+<img width="288" height="291" alt="msedge_33cIzZnu7E" src="assets/Alerts-8.gif" />
 
 
 Spinner names are also autocomplete-friendly constants — see **Constants** below.

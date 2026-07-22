@@ -4,7 +4,7 @@ Beautiful, animated **chart components for Ignition 8.3 Perspective** — Eleven
 a curated Apple-style palette, automatic light/dark theming, buttery entrance animations, and
 properties that are actually pleasant to bind in the Designer.
 
-<img width="1016" height="913" alt="msedge_FZ2PJUVpHo" src="https://github.com/user-attachments/assets/3ca29923-8e9f-426c-85b0-231682c3de6c" />
+<img width="1016" height="913" alt="msedge_FZ2PJUVpHo" src="assets/Charts-1.gif" />
 
 ```python
 # Every chart takes a dataset (from a named query, historian, etc.) or a plain array of objects.
@@ -41,8 +41,8 @@ All eleven appear in the Designer palette under the **Ectobox Charts** category.
 - **Overridable everywhere** — all styling is prefixed `.ecto-chart__*` CSS you can target from a
   project stylesheet.
 
-<img width="503" height="449" alt="image" src="https://github.com/user-attachments/assets/332e3445-0859-4de3-96a6-f27daa77e258" />
-<img width="493" height="447" alt="image" src="https://github.com/user-attachments/assets/373b93cd-2eac-4549-aecd-b90b3bb9047b" />
+<img width="503" height="449" alt="image" src="assets/Charts-2.png" />
+<img width="493" height="447" alt="image" src="assets/Charts-3.png" />
 
 ## Install
 
@@ -134,4 +134,4 @@ Transform (script):
 Gauges glide between values; set `animation.enabled = false` on rolling line/area/sparklines so they
 update like a clean live monitor.
 
-<img width="1016" height="913" alt="msedge_vwl2qnCWWL" src="https://github.com/user-attachments/assets/de0f971f-3b85-44f5-8f23-c6ae8f828834" />
+<img width="1016" height="913" alt="msedge_vwl2qnCWWL" src="assets/Charts-4.gif" />

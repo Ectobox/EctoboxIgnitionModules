@@ -4,7 +4,7 @@ A free Ignition 8.3 module that adds Ectobox scripting utilities to the `system.
 home for small, reusable Jython helpers — starting with proper rate-limiting. Every function is fully
 documented in the Designer's script editor, with real parameter names and descriptions in autocomplete.
 
-<img width="880" height="443" alt="image" src="https://github.com/user-attachments/assets/b49f22ea-6ea2-42cc-acb4-9e19c2046a78" />
+<img width="880" height="443" alt="image" src="assets/EctoboxIgnitionLibrary-1.png" />
 
 ## Install
 
@@ -40,7 +40,7 @@ system.ectobox.rate.debounce("recalc", 300, recalcTotals, [orderId])
 # Throttle: write to a tag at most once per second while a value chatters.
 system.ectobox.rate.throttle("tank1::level", 1000, updateHistorian, [newLevel])
 ```
-<img width="871" height="430" alt="image" src="https://github.com/user-attachments/assets/12fd46ec-5b0b-4223-b12a-43918ad1e0a6" />
+<img width="871" height="430" alt="image" src="assets/EctoboxIgnitionLibrary-2.png" />
 
 ### How `key` works
 
