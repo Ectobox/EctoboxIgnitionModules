@@ -65,6 +65,7 @@ Both appear in the Designer palette under **Ectobox Schedule**.
 | `laneStates` | Per-lane state spans behind the cards: `itemId`, `start`, `end`, `state`, `color`, `label`, `blocksDrop`. |
 | `globalBands` | Bands spanning all lanes (shifts/breaks): `start`, `end`, `label`, `color`, `opacity`, `blocksDrop`. |
 | `timeline` | `start`, `end`, `zoom` (month/day/12-hr/8-hr/6-hr/3-hr/hours/15-min/minutes), `snapMinutes`, `showCurrentTime`, `currentTime`. |
+| `navigation` | Built-in toolbar: `enabled` (prev / today / next + range label) and `showZoom`. Panning/zooming writes `timeline.start`/`end` back and fires `onRangeChanged`. |
 | `orientation` | `horizontal` (lanes are rows) or `vertical` (lanes are columns). |
 | `overlap` | `stack` (pack overlapping cards into sub-rows) or `reject` (refuse an overlapping move/drop). |
 | `addEnabled` / `moveEnabled` / `resizeEnabled` / `deleteEnabled` / `dropEnabled` | Toggle each interaction. |
@@ -84,7 +85,69 @@ The component **optimistically updates its own `events` prop** (so bindings see 
 | `onEventDropped` | `eventId, itemId, start, end, source` (the raw dropped object) |
 | `onEventDeleted` | `eventId, itemId` |
 | `onEventClicked` / `onSelectionChanged` | `eventId, itemId` (+ `selected[]` for selection changes) |
+| `onEventDoubleClicked` | `eventId, itemId, event` — open your own editor here (see below) |
+| `onRangeChanged` | `start, end` — the visible window changed via the navigation toolbar |
 | `onMoveRejected` | `eventId, fromItemId, attemptedItemId, reason` (`laneAccept` / `denyType` / `stateBandBlocked` / `lockedToItem` / `notMovable` / `overlap`) |
+
+## Editing cards
+
+The component is intentionally **unopinionated about editing** — rather than a fixed built-in form, it
+fires **`onEventDoubleClicked`** so you can open your own editor (a popup, a docked panel, whatever
+fits). Bind the schedule's `events` to something writable (a session/view custom property, a tag, a
+named-query-backed dataset), open your editor on double-click, and on save update that backing store —
+the schedule re-renders from the bound value. `selectedEvent` tells your editor which card is active.
+
+**Worked example — a double-click popup editor.** Bind `events` to `view.custom.events`
+(bidirectional, so drags/resizes persist too). On `onEventDoubleClicked`, open a small popup editor,
+passing each field as its own **top-level scalar param** (not one object param — Perspective popups
+populate scalar params only):
+
+```python
+# onEventDoubleClicked  (event has eventId / itemId / event)
+eid = event['eventId']
+evt = next((e for e in self.view.custom.events if e['id'] == eid), None)
+if evt:
+    system.perspective.openPopup('evtEditor', 'Schedule/EventEditor',
+        params={'id': evt['id'], 'name': evt['name'], 'type': evt.get('type',''),
+                'start': evt['start'], 'end': evt['end']},
+        title='Edit Event', modal=True, showCloseIcon=True)
+```
+
+In the editor view, declare each param with `propConfig["params.name"] = {"paramDirection": "input"}`
+and bind each field to `view.params.<field>` to **populate** it (openPopup only fills top-level scalar
+params — a nested `view.params.event.name` path won't populate). On **Save**, read the field
+components' **live values** (an openPopup-injected param does not accept a bidirectional write-back, so
+read the inputs directly), send them, and let the schedule's view update its store:
+
+```python
+# Save button — read the input components, not the params
+root = self.parent.parent            # buttons flex -> root
+def fld(group, field):
+    return root.getChild(group).getChild(field)
+def toIso(ms):
+    return None if not ms else system.date.format(system.date.fromMillis(long(ms)), "yyyy-MM-dd'T'HH:mm:ss")
+payload = {
+    'id':    self.view.params.id,
+    'name':  fld('nameGroup', 'nameField').props.text,
+    'type':  fld('typeGroup', 'typeField').props.value,      # dropdown
+    'start': toIso(fld('startGroup', 'startField').props.date),  # date-time-picker (ms)
+    'end':   toIso(fld('endGroup', 'endField').props.date),
+    'iconPath': fld('iconGroup', 'iconField').props.value,
+}
+system.perspective.sendMessage('ecto.sched.saveEvent', payload=payload, scope='page')
+system.perspective.closePopup('evtEditor')
+
+# 'ecto.sched.saveEvent' handler on the schedule's view — merge edited fields by id:
+edited = system.util.jsonDecode(system.util.jsonEncode(payload))
+events = system.util.jsonDecode(system.util.jsonEncode(self.view.custom.events))
+for e in events:
+    if e['id'] == edited['id']:
+        for k in ('name', 'type', 'start', 'end'):
+            if edited.get(k) is not None:
+                e[k] = edited[k]
+        e['leftBlock'] = {'enabled': True, 'icon': {'path': edited['iconPath']}} if edited.get('iconPath') else {'enabled': False}
+self.view.custom.events = events
+```
 
 ## Colors, badges & icons
 
