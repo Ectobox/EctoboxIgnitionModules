@@ -31,3 +31,9 @@ Thumbs.db
 .local/
 CertStuff/*.p12
 signing.properties
+# --- Agent tooling & local secrets — keep private, never commit ---
+.claude/
+.local/
+AGENTS.md
+CLAUDE.md
+.mcp.json
