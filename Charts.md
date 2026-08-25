@@ -1,6 +1,6 @@
 # Ectobox Charts
 
-Beautiful, animated **chart components for Ignition 8.3 Perspective** — Eleven chart types, hand-drawn as crisp SVG (no third-party charting library), with
+Beautiful, animated **chart components for Ignition 8.3 Perspective** — Twelve chart types, hand-drawn as crisp SVG (no third-party charting library), with
 a curated Apple-style palette, automatic light/dark theming, buttery entrance animations, and
 properties that are actually pleasant to bind in the Designer.
 
@@ -26,8 +26,9 @@ properties that are actually pleasant to bind in the Designer.
 | **Gauge** | `ectobox.chart.gauge` | A single value with red/amber/green thresholds. |
 | **Sparkline** | `ectobox.chart.sparkline` | Compact, axis-free trend lines for tiles/tables. |
 | **Heatmap** | `ectobox.chart.heatmap` | Value-colored grids (schedules, density, correlation). |
+| **Control Chart** | `ectobox.chart.control` | SPC: Individuals & Moving Range with zones and run rules. |
 
-All eleven appear in the Designer palette under the **Ectobox Charts** category.
+All twelve appear in the Designer palette under the **Ectobox Charts** category.
 
 ## Why it's different
 - **Hand-built SVG** — no ApexCharts/Chart.js/vendor bundle. Small, fast, and fully ours to shape.
@@ -116,6 +117,175 @@ Beyond `data` + `mapping`, the cartesian charts share these (each chart also add
 
 The Designer property editor shows every prop with inline descriptions, and defaults are chosen so a
 freshly-bound chart looks good immediately.
+
+## Control charts (SPC)
+
+The **Control Chart** (`ectobox.chart.control`) is a real SPC chart, not a line chart with two extra
+lines on it. Drop it on a view, bind `data`, point `mapping.valueColumn` at your measurement, and you get:
+
+- **Two stacked panels sharing one X axis** — Individuals on top, Moving Range beneath. Every variables
+  control chart is a pair, and both panels' limits are computed from the same σ estimate.
+- **σ zone bands** — the ±1σ/±2σ/±3σ A/B/C regions filled behind the series, with the A/B/C letters
+  in a reserved gutter to the right of the plot rather than printed over your data.
+- **Western Electric run rules**, marked on the chart, listed in the hover tooltip, and reported through
+  the `violations` property and the `onRuleViolation` event.
+- **Correct math.** σ comes from the average moving range (`MR̄ / d2(2)`, i.e. `MR̄ / 1.1284`), not from the
+  standard deviation of the individuals — using `s` would let a slow drift inflate the limits until the
+  very drift you're hunting looked normal. The d2/d3/c4 factors are the published exact-integral tables,
+  so the limits agree with what you'd calculate by hand.
+
+Set **`chartType`** to pick the family. `IMR` (the default) is what you want for one measurement per part
+or batch, and is the type this release computes; `XbarR`, `XbarS`, `P`, `NP`, `C`, `U` are in the enum so
+that switching later is a property change rather than re-dropping the component.
+
+### Panels and layout
+
+The two panels are configured through `panels`:
+
+| Prop | Notes |
+|---|---|
+| `panels.primary.title` / `panels.secondary.title` | Panel headings, drawn above each panel. Blank uses the right label for the chart type (“Individual value” / “Moving range” for I-MR). |
+| `panels.primary.height` / `panels.secondary.height` | Height *weights* against each other, not pixels — 2 against 1 by default, so the individuals panel gets two thirds. |
+| `panels.secondary.show` | Draw the range panel at all. |
+
+Panel headings sit above their panel and the A/B/C zone letters sit in a gutter on the right, so neither
+can end up on top of a control limit, a gridline, or the last few points — which is exactly where a
+control chart is most worth reading. Both strips are only reserved when there is something to put in
+them: turn `zones.labels` off and the plot takes the right-hand gutter back.
+
+In a component too short to render both panels legibly, the range panel **removes itself** rather than
+squashing the pair into unreadable strips — an I-MR chart dropped into a 200 px dashboard tile still
+shows a usable individuals chart.
+
+### The rules
+
+| id | Rule |
+|---|---|
+| `beyondLimits` | 1 point beyond zone A (outside the control limits). |
+| `twoOfThree` | 2 of 3 consecutive points in zone A or beyond, same side of the centerline. |
+| `fourOfFive` | 4 of 5 consecutive points in zone B or beyond, same side. |
+| `runOneSide` | 8 consecutive points on one side of the centerline. |
+
+Narrow them with `rules.enabled` (a list of ids); leave it empty to run all four. Runs are never counted
+across a gap in the data — "8 in a row" spanning measurements you don't have is a false alarm.
+
+Only `beyondLimits` is applied to the **moving range** panel. A moving range is a skewed statistic whose
+consecutive values share an observation, so zone and run rules there fire constantly for no reason.
+
+### Read this bit: `limits.mode` should usually be `frozen`
+
+`compute` is the **default** because it needs no configuration — the limits are recalculated from every
+point on the chart. It's the right choice while you're exploring, and the wrong one for a chart somebody
+is actually watching:
+
+> With `compute`, a process that drifts out of control **quietly widens its own limits** until nothing
+> looks wrong. The excursion you want to catch becomes part of the data the limits are built from.
+
+So in production, take a known-good baseline run and hold those limits:
+
+```python
+limits.mode              = "frozen"
+limits.baseline.count    = 25       # "the first 25 points"
+# or limits.baseline.fromIndex / toIndex for an explicit window
+```
+
+`manual` takes limits you supply (`limits.manualPrimary` / `manualSecondary` — a trio counts as set once
+`ucl` is above `lcl`, so the all-zero default means "work it out"). σ is re-derived from the limits you
+give, so the zone bands still line up with them.
+
+### Read this bit too: spec limits are not control limits
+
+They get conflated constantly, and it matters:
+
+- **UCL / LCL** come from **your process** — what it actually does when nothing is wrong.
+- **USL / LSL** come from **your customer's tolerance** — what they'll accept.
+
+A process can be perfectly in control and still produce scrap, or be out of control while every part is
+in spec. This component draws **control** limits. Spec limits and the capability numbers (Cp, Cpk, Pp,
+Ppk) that compare the two arrive in a later release, and will be drawn distinctly — different dash,
+different color, own legend entry — precisely so they can't be mistaken for UCL/LCL.
+
+### Outputs and events
+
+The component writes its own analysis back into two read-only properties, so an exception report is a
+binding rather than a script:
+
+| Property | Contents |
+|---|---|
+| `results` | `inControl`, `pointCount`, `baselineUsed`, `truncated`, and a `primary`/`secondary` block each with `centerline`, `ucl`, `lcl`, `sigma`, `values`. |
+| `violations` | One row per rule hit: `index`, `label`, `panel`, `ruleId`, `ruleName`, `description`, `value`. Bind a Table straight to it. |
+
+Writes only happen when the computed answer actually changes, so they can't loop. Set
+`output.writeBack = false` to turn them off and drive everything from events instead:
+
+- **`onRuleViolation`** — fires when the set of violations changes, *including back to empty*, so it can
+  both raise and clear an alarm. Payload: `violations`, `inControl`, `chartType`.
+- **`onPointClick`** — `index`, `label`, `panel`, `value`, and that point's `violations`.
+
+### maxPoints
+
+Historian queries happily return thousands of rows, and an SVG with thousands of markers stops being
+usable, so `maxPoints` (default **200**) keeps the most recent N. Truncation is never silent: the title
+shows *"showing the last N of M observations"*, the browser console warns, and `results.truncated`
+reports it. Note that the limits and rule checks then describe **only the points shown** — set it to `0`
+for no cap.
+
+### Styling
+
+Alongside the usual `.ecto-chart__*` classes, the control-chart semantics are their own CSS variables so
+a theme can re-skin them: `--ecto-spc-centerline`, `--ecto-spc-limit`, `--ecto-spc-violation`, and
+`--ecto-spc-zone-a` / `-zone-b` / `-zone-c`. The centerline is solid and the control limits are dashed on
+purpose — you can tell "where the process is centered" from "where it stops being acceptable" without
+reading the legend.
+
+## Scripting: `system.ectobox.charts.spc.*`
+
+The same math is available to Jython, for alarming, reports and named-query post-processing — so a
+script-driven alarm and the chart on the screen can never disagree. Available in gateway *and* Designer
+scope (the Designer registration is what gives you autocomplete while you write).
+
+```python
+weights = system.db.runQuery("SELECT fill_weight FROM fills ORDER BY ts")
+
+r = system.ectobox.charts.spc.Analyze(weights, {
+        'valueColumn': 'fill_weight',
+        'limitMode':   'frozen',
+        'baselineCount': 25,
+    })
+
+if not r['inControl']:
+    for v in r['violations']:
+        print "%s at %s: %s (%.2f)" % (v['ruleName'], v['label'], v['panel'], v['value'])
+```
+
+| Function | Returns |
+|---|---|
+| `Analyze(data, options)` | Everything: limits, per-point values/zones/hits, `violations`, `inControl`, `baseline`, `truncated`, `error`. |
+| `Limits(data, options)` | Just the centerline/UCL/LCL/σ for each panel — for storing limits or seeding a `manual` chart. |
+| `CheckRules(data, options)` | Just the violation list, ready to iterate. |
+| `Rules(ruleSet)` | The rules as `id`/`name`/`description` dicts, for building a rule picker or a report. |
+
+`data` accepts a **Dataset** (straight from `system.db.runQuery` or a tag history query), a list of
+numbers, a list of dictionaries, or a list of rows. With dictionaries you must set
+`options['valueColumn']` — a Jython dict has no column order to guess from.
+
+`options` keys, all optional: `valueColumn`, `labelColumn`, `chartType`, `sigmaMultiplier`, `maxPoints`,
+`limitMode`, `baselineCount` / `baselineFrom` / `baselineTo`, `centerline` / `ucl` / `lcl` (and
+`mrCenterline` / `mrUcl` / `mrLcl` for the range panel), `ruleSet`, `rules`.
+
+**Always check `r['error']`** before trusting the limits — it's `None` on success, and a sentence
+explaining itself when there wasn't enough data or the chart type isn't computed yet.
+
+The factor table is exposed too, so you can build limits by hand without hardcoding `1.128` somewhere:
+
+```python
+C = system.ectobox.charts.spc.constants
+sigma = mrBar / C.d2(2)          # 1.1284
+ucl   = rBar  * C.D4(5)          # 2.1145
+```
+
+`d2(n)`, `d3(n)`, `c4(n)`, `D3(n)`, `D4(n)`, `B3(n)`, `B4(n)`, `A2(n)`, `A3(n)` — deliberately keeping
+their textbook casing, because that's what every SPC reference and printed factor table calls them.
 
 ## Live / streaming data
 
