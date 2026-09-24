@@ -15,6 +15,8 @@ flowchart TD
     Check -->|Yes| Fill[Filler] --> Cap[Capper] --> Ship([Dispatch])
 ```
 
+<img width="1016" height="560" alt="A packaging line flowchart laid out automatically, beside the sixteen lines of text that produced it" src="assets/Diagrams-1.png" />
+
 ## What's included
 
 | Component | Component id | Good for |
@@ -47,6 +49,9 @@ Plus a scripting namespace for generating specs from data:
   per-theme setup, and every color is a CSS variable you can override.
 - **Errors you can act on.** A spec that doesn't parse shows the offending line numbers and messages in
   the component — never a blank box that looks like a broken binding.
+
+<img width="500" height="267" alt="A bottling line bound to live tags with a faulted capper shown in red, light theme" src="assets/Diagrams-2.png" />
+<img width="500" height="267" alt="The same live bottling line in the dark theme" src="assets/Diagrams-3.png" />
 
 ## Install
 
@@ -161,24 +166,38 @@ freshly-dropped diagram looks right immediately.
 `activeState` covers the simple "where am I now" case. Use `nodeStates` when several states need
 coloring at once — one active plus two alarmed, say.
 
+<img width="1016" height="402" alt="A CIP sequence state diagram with the active step highlighted and the completed steps marked green" src="assets/Diagrams-4.png" />
+
 ## Events
 
 | Event | Payload |
 |---|---|
-| `onNodeClick` (Flow Diagram) | `id`, `label`, `shape`, `classes`, `group`. |
-| `onNodeClick` (State Diagram) | `id`, `label`, `classes`, `group`, `active` (true when it's the `activeState`). |
+| `onNodeClick` (Flow Diagram) | `id`, `label`, `shape`, `classes`, `group`, and `state` — the node's current state from `nodeStates`, or `''` when it has none. |
+| `onNodeClick` (State Diagram) | `id`, `label`, `classes`, `group`, `active` (true when it's the `activeState`), and `state` — the state as drawn: its `nodeStates` entry, else `active` / `done` from `activeState` / `visitedStates`, else `''`. |
 | `onEdgeClick` (both) | `id`, `from`, `to`, `label`. |
 
-`event.id` is the node id from the spec, so it matches the ids you use in `nodeStates`:
+`event.id` is the node id from the spec, so it matches the ids you use in `nodeStates`, and
+`event.state` tells the handler what the operator was looking at when they clicked — no need to
+re-read the tags:
 
 ```python
 # onNodeClick on a packaging line Flow Diagram
-system.perspective.openPopup(
-    'machineDetail',
-    'Popups/MachineDetail',
-    params={'machinePath': '[default]Packaging/Line1/{0}'.format(event.id)},
-    title=event.label
-)
+machinePath = '[default]Packaging/Line1/{0}'.format(event.id)
+if event.state == 'bad':
+    # A faulted unit goes straight to its alarms
+    system.perspective.openPopup(
+        'machineAlarms',
+        'Popups/MachineAlarms',
+        params={'machinePath': machinePath},
+        title='{0}: alarms'.format(event.label)
+    )
+else:
+    system.perspective.openPopup(
+        'machineDetail',
+        'Popups/MachineDetail',
+        params={'machinePath': machinePath},
+        title=event.label
+    )
 ```
 
 ## Output props
@@ -315,6 +334,8 @@ diagrams, state names that aren't already valid ids go through `SafeId` — `"Cl
 folders as containers, optionally the atomic tags and their current values. Point it at an area folder
 and the equipment hierarchy draws itself.
 
+<img width="1016" height="402" alt="A plant's equipment hierarchy drawn by FromUdtStructure from the live tag tree" src="assets/Diagrams-5.png" />
+
 ```python
 # Binding on a Flow Diagram's text prop: expression binding on the view's area path, then this transform
 def transform(self, value, quality, timestamp):
@@ -352,9 +373,28 @@ properties you can override from a project stylesheet:
 
 The full set: `--ecto-diagram-node-fill`, `-node-stroke`, `-text`, `-sub-text`, `-edge-stroke`,
 `-edge-muted`, `-group-fill`, `-group-stroke`, `-group-label`, `-plate` (the backing behind edge
-labels), and the `-control-bg` / `-control-border` of the zoom buttons. The semantic state colors
-(`active`, `good`, `warn`, `bad`, …) are fixed; to use a different color on a particular node or edge,
-set `color` in its `nodeStates` / `edgeStates` entry.
+labels), and the `-control-bg` / `-control-border` of the zoom buttons.
+
+The semantic state colors are variables too, so one override recolors a state on every node and edge:
+
+| Variable | State | Default |
+|---|---|---|
+| `--ecto-diagram-active` | `active` | `#0a84ff` |
+| `--ecto-diagram-running` | `running` | follows `--ecto-diagram-active` |
+| `--ecto-diagram-good` | `good` | `#30d158` |
+| `--ecto-diagram-done` | `done` | follows `--ecto-diagram-good` |
+| `--ecto-diagram-warn-state` | `warn` | `#ff9f0a` |
+| `--ecto-diagram-bad` | `bad` | `#ff453a` |
+
+```css
+/* Plant standard: faults are magenta, not red */
+:root {
+  --ecto-diagram-bad: #d500f9;
+}
+```
+
+A state's fill is its color at low opacity, so it reads the same on light and dark backgrounds. To use
+a different color on one particular node or edge, set `color` in its `nodeStates` / `edgeStates` entry.
 
 Everything drawn is a prefixed class you can restyle: `.ecto-diagram__node`, `.ecto-diagram__node-shape`,
 `.ecto-diagram__node-label`, `.ecto-diagram__node-sub`, `.ecto-diagram__node-badge`,
