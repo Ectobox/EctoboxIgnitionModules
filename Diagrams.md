@@ -407,5 +407,7 @@ Everything drawn is a prefixed class you can restyle: `.ecto-diagram__node`, `.e
 `maxNodes` (default **400**) caps how much is drawn; going over it reports the truncation in
 `parse.warnings` rather than locking up the browser. `layout.crossingPasses` (default 8) trades tidiness
 for speed on large graphs. `interaction.minAutoZoom` (default 0.55) stops a large diagram shrinking
-below readability — past that point it stays legible and you pan instead of squinting. Set it to `0.05`
+below readability — past that point it stays legible and you pan instead of squinting. A diagram too
+big to fit opens at the start of its flow (the top for `TD`, the left for `LR`, the bottom for `BT`, the
+right for `RL`), so you always see where the process begins and pan onward from there. Set it to `0.05`
 to always fit the whole thing in view.
