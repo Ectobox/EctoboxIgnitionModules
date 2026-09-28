@@ -30,9 +30,10 @@ Plus a scripting namespace for generating specs from data:
 
 | Function | What it does |
 |---|---|
-| `system.ectobox.diagrams.FlowFromDataset(edges, nodes, direction, defaultShape, connector)` | Builds a flowchart from an edge list (+ optional node list). Takes a dataset, a list of dicts, or a list of lists. |
+| `system.ectobox.diagrams.FlowFromDataset(edges, nodes, direction, defaultShape, connector)` | Builds a flowchart from an edge list (+ optional node list). Takes a dataset, a list of dicts, a list of lists or tuples, or the rows a Perspective binding hands you. |
 | `system.ectobox.diagrams.StateFromTransitions(transitions, direction, initial, terminal)` | Builds a state diagram from a from/to/event transition table. |
 | `system.ectobox.diagrams.FromUdtStructure(tagPath, direction, style, maxDepth, includeTags, showTypes, showValues)` | Walks the live tag tree and renders the equipment hierarchy. |
+| `system.ectobox.diagrams.TagNodeId(rootPath, tagPath)` | The node id `FromUdtStructure` gives a tag, for keying `nodeStates` by tag. |
 | `system.ectobox.diagrams.Escape(label)` / `SafeId(text)` | Make arbitrary text safe to drop into a spec. |
 
 ## Why it's different
@@ -93,6 +94,9 @@ whole diagram.
   bidirectional, `~~~` invisible. Extra dashes (`--->`) push the nodes further apart.
 - Edge labels: `A -->|yes| B` or `A -- yes --> B`
 - `subgraph Name [Title]` … `end`, including nesting
+- Edges to a subgraph itself (`intake --> process`) land on its box
+- `direction LR` inside a subgraph lays that subgraph out its own way — when nothing inside it links to
+  the outside, which is Mermaid's own rule
 - `classDef` / `class` / `:::class` / `style`
 - `A & B --> C & D` (cross product)
 
@@ -100,13 +104,18 @@ whole diagram.
 
 - Transitions with `A --> B : trigger`
 - `[*]` start and end markers (per scope)
-- `state Name { … }` composite states, `state "Long name" as X` aliases
+- `state Name { … }` composite states, nested to any depth, `state "Long name" as X` aliases. A
+  composite is a state in its own right: `Idle --> Producing` lands on the Producing box and
+  `Producing --> Faulted` leaves it, and a transition from outside to a sub-state enters the box and
+  runs to that sub-state.
+- `direction LR` inside a composite lays out just that composite's contents that way
 - `X : description` second lines, `note right of X : text`
 - `direction LR`, `<<choice>>`
 
 Not supported — reported in `parse.warnings`, not silently mangled: `click`, `linkStyle`, multi-line
-notes, concurrency regions, fork/join bars, and diagram kinds other than the two above
-(`sequenceDiagram`, `gantt`, class and ER diagrams).
+notes, concurrency regions and fork/join bars. A spec for another diagram kind (`sequenceDiagram`,
+`gantt`, class, ER and the rest) is refused with an error in `parse.errors` that names the kind, rather
+than drawn as a flowchart of its keywords.
 
 ## Data & bindings
 
@@ -139,9 +148,8 @@ Both components share these (the State Diagram adds its own block below):
 | `layout` | `nodeSpacing`, `rankSpacing`, `edgeStyle` (`orthogonal`/`curved`/`straight`), `cornerRadius`, `crossingPasses`, `straightenChains`. |
 | `nodeStyle` | `minWidth`, `paddingX`, `paddingY`, `cornerRadius`, `fontSize`, `maxLabelWidth`, `shadow`. |
 | `edgeStyle` | `width`, `arrowSize`, `fontSize`, `labelBackground`. |
-| `interaction` | `panZoom`, `fitToView`, `maxAutoZoom`, `minAutoZoom`, `showControls`, `clickableNodes`. |
+| `interaction` | `panZoom`, `wheelZoom`, `fitToView`, `maxAutoZoom`, `minAutoZoom`, `showControls`, `clickableNodes`. `wheelZoom` is `"ctrl"` by default: the wheel zooms only with Ctrl or ⌘ held (or a trackpad pinch), so a diagram on a scrolling page never traps the page's scroll. `"always"` suits a diagram that fills its page; `"off"` leaves zoom to the buttons. |
 | `animation` | `enabled`, `durationMs`. |
-| `palette` | Optional list of colors for classed nodes (`classDef`), overriding the built-in palette. |
 | `maxNodes` | Safety cap, default **400**. |
 | `title` | Optional heading above the diagram. |
 
@@ -156,11 +164,11 @@ freshly-dropped diagram looks right immediately.
 
 | Prop | Notes |
 |---|---|
-| `activeState` | The state the machine is in *right now*. Bind it to one tag and that state highlights and pulses. |
+| `activeState` | The state the machine is in *right now*. Bind it to one tag and that state highlights and pulses. It can name a composite state: the whole box lights up, with its transitions in and out. |
 | `visitedStates` | State ids already passed through, drawn as completed — a breadcrumb trail through a batch or CIP sequence. |
 | `stateOptions.highlightActivePath` | Also light up the transitions into and out of `activeState` (default on). |
-| `stateOptions.showStartEnd` | Draw the `[*]` start (filled dot) and end (ringed dot) markers. |
-| `stateOptions.compositePadding` | Padding in px inside a composite state's box. |
+| `stateOptions.showStartEnd` | Draw the `[*]` start (filled dot) and end (ringed dot) markers. Off hides them and the transitions to and from them (default on). |
+| `stateOptions.compositePadding` | Space in px between a composite state's border and what's inside it (default 18). |
 | `stateOptions.dimInactive` | Fade every state except the active one — reads well on a large model on a big screen. |
 
 `activeState` covers the simple "where am I now" case. Use `nodeStates` when several states need
@@ -172,8 +180,8 @@ coloring at once — one active plus two alarmed, say.
 
 | Event | Payload |
 |---|---|
-| `onNodeClick` (Flow Diagram) | `id`, `label`, `shape`, `classes`, `group`, and `state` — the node's current state from `nodeStates`, or `''` when it has none. |
-| `onNodeClick` (State Diagram) | `id`, `label`, `classes`, `group`, `active` (true when it's the `activeState`), and `state` — the state as drawn: its `nodeStates` entry, else `active` / `done` from `activeState` / `visitedStates`, else `''`. |
+| `onNodeClick` (Flow Diagram) | `id`, `label`, `shape`, `classes`, `group`, and `state` — the node's current state from `nodeStates`, or `''` when it has none. A click on a subgraph's box fires it too, with `shape` `'group'`. |
+| `onNodeClick` (State Diagram) | `id`, `label`, `classes`, `group`, `active` (true when it's the `activeState`), and `state` — the state as drawn: its `nodeStates` entry, else `active` / `done` from `activeState` / `visitedStates`, else `''`. A click on a composite state's box fires it too, with that composite's `id`. |
 | `onEdgeClick` (both) | `id`, `from`, `to`, `label`. |
 
 `event.id` is the node id from the spec, so it matches the ids you use in `nodeStates`, and
@@ -356,6 +364,27 @@ def transform(self, value, quality, timestamp):
 | `includeTags` | Include atomic tags, not just folders and UDT instances. Default `False`. |
 | `showTypes` | Show a UDT instance's type name on a second line. Default `True`. |
 | `showValues` | Read and show each tag's current value. Implies `includeTags`. Default `False`. |
+
+Each node's id is its tag path below `tagPath`, segments joined by a double underscore: browsing
+`[default]Packaging` gives `Line1__Filler01` for `[default]Packaging/Line1/Filler01`. It is the same on
+every run, so it can key `nodeStates` — `TagNodeId(rootPath, tagPath)` returns it for any tag — and for
+tag names made of letters, digits and underscores `event.id.replace('__', '/')` turns a clicked node
+back into its path.
+
+```python
+# nodeStates binding on the same Flow Diagram: each unit red while its Faulted tag is set
+def transform(self, value, quality, timestamp):
+    rootPath = '[default]Packaging'
+    unitPaths = ['{0}/Line1/{1}'.format(rootPath, name) for name in ('Filler01', 'Capper01', 'Labeller01')]
+    faults = system.tag.readBlocking(['{0}/Faulted'.format(p) for p in unitPaths])
+    states = []
+    for unitPath, fault in zip(unitPaths, faults):
+        states.append({
+            'id': system.ectobox.diagrams.TagNodeId(rootPath, unitPath),
+            'state': 'bad' if fault.value else 'running',
+        })
+    return states
+```
 
 ## Theming & CSS
 
