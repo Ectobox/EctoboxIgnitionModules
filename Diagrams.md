@@ -82,40 +82,69 @@ need something specific.
 
 ## Supported syntax
 
-A deliberate **subset** of Mermaid, chosen around what industrial users actually reach for. Specs paste
-in from Mermaid docs and work; unsupported constructs are skipped with a warning rather than failing the
-whole diagram.
+Mermaid's flowchart and state-diagram syntax, drawn the way Mermaid means it. A spec pasted from the
+Mermaid docs works; the little that has nothing to draw here is reported in `parse.warnings` rather than
+silently mangled.
 
-**`flowchart TD | BT | LR | RL`**
+**`flowchart TD | BT | LR | RL`** (also `graph`, and `flowchart-elk`, drawn with the built-in layout)
 
 - Node shapes: `[rect]`, `(round)`, `([stadium])`, `[[subroutine]]`, `[(cylinder)]`, `((circle))`,
-  `{rhombus}`, `{{hexagon}}`, `[/parallelogram/]`, `[/trapezoid\]`, `>asymmetric]`
+  `(((double circle)))`, `{rhombus}`, `{{hexagon}}`, `[/parallelogram/]`, `[/trapezoid\]`, `>asymmetric]`
+- Mermaid 11's named shapes: `Check@{ shape: diam, label: "In spec?" }` — `rect`, `rounded`, `stadium`,
+  `subproc`, `cyl`, `circle`, `dbl-circ`, `diam`, `hex`, `lean-r`, `lean-l`, `trap-b`, `trap-t`, `odd`,
+  `sm-circ`, `fr-circ`, `fork`, and their long-form aliases. Any other named shape is drawn as a rectangle,
+  with a warning.
 - Edges: `-->` arrow, `---` line, `-.->` dotted, `==>` thick, `--x` cross, `--o` circle, `<-->`
-  bidirectional, `~~~` invisible. Extra dashes (`--->`) push the nodes further apart.
-- Edge labels: `A -->|yes| B` or `A -- yes --> B`
+  bidirectional, `o--o` / `x--x` both ends, `~~~` invisible. Extra dashes (`--->`) push the nodes further
+  apart.
+- Edge labels: `A -->|yes| B`, `A -- yes --> B`, `A -. rework .-> B`, `A == main ==> B`
+- Edge ids and animation: `A e1@--> B`, then `e1@{ animate: true }`. The id is the edge's own id, so
+  `edgeStates` can key on it.
+- `linkStyle 0,2 stroke:#f00,stroke-width:3px` by edge number (counting from 0, in spec order), and
+  `linkStyle default …` for every edge. `stroke`, `stroke-width`, `stroke-dasharray`, `opacity`, and
+  `color` for the label. Live `edgeStates` colours still win.
+- `click` — `click A "/units/filler" "Tooltip" _blank`, `click A href "…"`, `click A callback "Tooltip"`,
+  `click A call openUnit("A", 2)`. The tooltip shows on hover; see **Events** for what a click does.
 - `subgraph Name [Title]` … `end`, including nesting
 - Edges to a subgraph itself (`intake --> process`) land on its box
 - `direction LR` inside a subgraph lays that subgraph out its own way — when nothing inside it links to
   the outside, which is Mermaid's own rule
-- `classDef` / `class` / `:::class` / `style`
+- `classDef` / `class` / `:::class` / `style`, including `classDef default` for every node
 - `A & B --> C & D` (cross product)
+- Markdown strings (`` "`**Filler** 01`" ``): the markers are dropped and line breaks kept. Entity codes
+  (`#gt;`, `&deg;`, `#35;`) and `<br/>` are decoded.
+- `;` between statements, `%%` comments, and `%%{init: …}%%` directives (ignored)
+- `accTitle: …` / `accDescr: …` (and the `accDescr { … }` block) become the drawing's accessible name and
+  description, for screen readers
+- Icons (`fa:fa-industry`) aren't drawn; the label text is kept, with a warning
+
+<img width="844" height="451" alt="A flowchart using Mermaid 11 named shapes: a diamond decision, a cylinder buffer tank, a dashed rework edge and a red No edge styled with linkStyle" src="assets/Diagrams-9.png" />
 
 **`stateDiagram-v2`**
 
-- Transitions with `A --> B : trigger`
+- Transitions with `A --> B : trigger`, and chains `A --> B --> C : trigger`
 - `[*]` start and end markers (per scope)
 - `state Name { … }` composite states, nested to any depth, `state "Long name" as X` aliases. A
   composite is a state in its own right: `Idle --> Producing` lands on the Producing box and
   `Producing --> Faulted` leaves it, and a transition from outside to a sub-state enters the box and
   runs to that sub-state.
 - `direction LR` inside a composite lays out just that composite's contents that way
-- `X : description` second lines, `note right of X : text`
-- `direction LR`, `<<choice>>`
+- Concurrent regions: `--` inside a composite splits it into regions that run at the same time, drawn
+  side by side with a dashed divider, each with its own `[*]` markers
+- `<<fork>>` / `<<join>>` bars that stretch across the branches they split or merge, and `<<choice>>`
+- Notes beside their state: `note left of X : text`, or `note right of X` with the text on the following
+  lines up to `end note`. Floating notes: `note "text" as N1`
+- `X : description` second lines
+- `classDef` / `class` / `:::class` (on declarations and transitions) / `style`
+- `click`, `accTitle` / `accDescr`, `direction LR`, `%%` comments
 
-Not supported — reported in `parse.warnings`, not silently mangled: `click`, `linkStyle`, multi-line
-notes, concurrency regions and fork/join bars. A spec for another diagram kind (`sequenceDiagram`,
-`gantt`, class, ER and the rest) is refused with an error in `parse.errors` that names the kind, rather
-than drawn as a flowchart of its keywords.
+<img width="500" height="465" alt="A state diagram where a fork bar splits into filling and labelling side by side and a join bar waits for both before packing" src="assets/Diagrams-6.png" />
+<img width="500" height="490" alt="A batch composite state split into two concurrent regions, heating and agitating, with a dashed divider between them" src="assets/Diagrams-7.png" />
+
+<img width="764" height="651" alt="A state diagram with dashed notes drawn beside the Idle, Running and Faulted states" src="assets/Diagrams-8.png" />
+
+A spec for another diagram kind (`sequenceDiagram`, `gantt`, class, ER and the rest) is refused with an
+error in `parse.errors` that names the kind, rather than drawn as a flowchart of its keywords.
 
 ## Data & bindings
 
@@ -148,7 +177,7 @@ Both components share these (the State Diagram adds its own block below):
 | `layout` | `nodeSpacing`, `rankSpacing`, `edgeStyle` (`orthogonal`/`curved`/`straight`), `cornerRadius`, `crossingPasses`, `straightenChains`. |
 | `nodeStyle` | `minWidth`, `paddingX`, `paddingY`, `cornerRadius`, `fontSize`, `maxLabelWidth`, `shadow`. |
 | `edgeStyle` | `width`, `arrowSize`, `fontSize`, `labelBackground`. |
-| `interaction` | `panZoom`, `wheelZoom`, `fitToView`, `maxAutoZoom`, `minAutoZoom`, `showControls`, `clickableNodes`. `wheelZoom` is `"ctrl"` by default: the wheel zooms only with Ctrl or ⌘ held (or a trackpad pinch), so a diagram on a scrolling page never traps the page's scroll. `"always"` suits a diagram that fills its page; `"off"` leaves zoom to the buttons. |
+| `interaction` | `panZoom`, `wheelZoom`, `fitToView`, `maxAutoZoom`, `minAutoZoom`, `showControls`, `clickableNodes`, `followLinks`. `wheelZoom` is `"ctrl"` by default: the wheel zooms only with Ctrl or ⌘ held (or a trackpad pinch), so a diagram on a scrolling page never traps the page's scroll. `"always"` suits a diagram that fills its page; `"off"` leaves zoom to the buttons. |
 | `animation` | `enabled`, `durationMs`. |
 | `maxNodes` | Safety cap, default **400**. |
 | `title` | Optional heading above the diagram. |
@@ -181,32 +210,32 @@ coloring at once — one active plus two alarmed, say.
 | Event | Payload |
 |---|---|
 | `onNodeClick` (Flow Diagram) | `id`, `label`, `shape`, `classes`, `group`, and `state` — the node's current state from `nodeStates`, or `''` when it has none. A click on a subgraph's box fires it too, with `shape` `'group'`. |
+| `onNodeClick` from a `click` line (both) | Adds `link` and `linkTarget`, or `callback` and `callbackArgs` (the arguments of `click X call fn(…)`, as text). With `interaction.followLinks` on (the default), a project page link (`/units/filler`) navigates in the session — the page is being replaced, so onNodeClick doesn't fire — and a full URL opens in a new tab and fires onNodeClick. Turn `followLinks` off to handle every link yourself. |
 | `onNodeClick` (State Diagram) | `id`, `label`, `classes`, `group`, `active` (true when it's the `activeState`), and `state` — the state as drawn: its `nodeStates` entry, else `active` / `done` from `activeState` / `visitedStates`, else `''`. A click on a composite state's box fires it too, with that composite's `id`. |
 | `onEdgeClick` (both) | `id`, `from`, `to`, `label`. |
 
 `event.id` is the node id from the spec, so it matches the ids you use in `nodeStates`, and
-`event.state` tells the handler what the operator was looking at when they clicked — no need to
-re-read the tags:
+`event.state` tells the handler what the operator was looking at when they clicked — it can decide what
+the click means without re-reading every tag first. This one tells the operator about the machine they
+clicked, using [Ectobox Alerts](Alerts.md) — drop one **Alert Host** on the page and the message box and
+toasts appear over it:
 
 ```python
-# onNodeClick on a packaging line Flow Diagram
+# onNodeClick on a packaging line Flow Diagram, on a page with an Ectobox Alerts Alert Host
 machinePath = '[default]Packaging/Line1/{0}'.format(event.id)
 if event.state == 'bad':
-    # A faulted unit goes straight to its alarms
-    system.perspective.openPopup(
-        'machineAlarms',
-        'Popups/MachineAlarms',
-        params={'machinePath': machinePath},
-        title='{0}: alarms'.format(event.label)
-    )
+    faultCode = system.tag.readBlocking(['{0}/FaultCode'.format(machinePath)])[0].value
+    system.ectobox.alerts.ShowMessageBox(
+        '{0} is faulted'.format(event.label),
+        'Fault {0}. Clear it at the machine, then reset it from its panel.'.format(faultCode),
+        'error', ['OK'], pageId=self.page.id)
 else:
-    system.perspective.openPopup(
-        'machineDetail',
-        'Popups/MachineDetail',
-        params={'machinePath': machinePath},
-        title=event.label
-    )
+    rate = system.tag.readBlocking(['{0}/Rate'.format(machinePath)])[0].value
+    system.ectobox.alerts.ShowToast(
+        event.label, 'Running at {0} per minute.'.format(rate), 'success', pageId=self.page.id)
 ```
+
+<img width="1016" height="669" alt="Clicking the faulted capper on a packaging line diagram raises an Ectobox Alerts message box saying the capper is faulted" src="assets/Diagrams-10.png" />
 
 ## Output props
 
