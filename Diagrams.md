@@ -1,7 +1,7 @@
 # Ectobox Diagrams
 
-**Mermaid-style diagrams for Ignition 8.3 Perspective** — flowcharts, state diagrams and sequence
-diagrams written as plain text, laid out automatically, and rendered as crisp SVG. No charting library, no graph-layout
+**Mermaid-style diagrams for Ignition 8.3 Perspective** — flowcharts, state diagrams, sequence
+diagrams and Gantt charts written as plain text, laid out automatically, and rendered as crisp SVG. No charting library, no graph-layout
 library: the parser, the layout engine and the renderer are all ours.
 
 The part that makes it an Ignition component rather than a Mermaid port: **the diagram is live.** The
@@ -24,8 +24,9 @@ flowchart TD
 | **Flow Diagram** | `ectobox.diagram.flow` | Process flow, logic, routing, decisions, subgraphs. |
 | **State Diagram** | `ectobox.diagram.state` | Machine modes, batch steps, CIP sequences, permit logic. |
 | **Sequence Diagram** | `ectobox.diagram.sequence` | MES-to-PLC handshakes, recipe downloads, operator confirmations, interface logs. |
+| **Gantt Chart** | `ectobox.diagram.gantt` | Shutdown plans, changeovers, a shift's production schedule, work orders against the clock. |
 
-All three appear in the Designer palette under the **Ectobox Diagrams** category.
+All four appear in the Designer palette under the **Ectobox Diagrams** category.
 
 Plus a scripting namespace for generating specs from data:
 
@@ -34,6 +35,7 @@ Plus a scripting namespace for generating specs from data:
 | `system.ectobox.diagrams.FlowFromDataset(edges, nodes, direction, defaultShape, connector)` | Builds a flowchart from an edge list (+ optional node list). Takes a dataset, a list of dicts, a list of lists or tuples, or the rows a Perspective binding hands you. |
 | `system.ectobox.diagrams.StateFromTransitions(transitions, direction, initial, terminal)` | Builds a state diagram from a from/to/event transition table. |
 | `system.ectobox.diagrams.SequenceFromEvents(events, participants, autonumber, title)` | Builds a sequence diagram from a message log: sender, receiver, message, and optionally the kind of message. |
+| `system.ectobox.diagrams.GanttFromSchedule(tasks, title, excludes, compact)` | Builds a Gantt chart from a schedule or work-order list: name, section, start, end or duration, dependencies and status. |
 | `system.ectobox.diagrams.FromUdtStructure(tagPath, direction, style, maxDepth, includeTags, showTypes, showValues)` | Walks the live tag tree and renders the equipment hierarchy. |
 | `system.ectobox.diagrams.TagNodeId(rootPath, tagPath)` | The node id `FromUdtStructure` gives a tag, for keying `nodeStates` by tag. |
 | `system.ectobox.diagrams.Escape(label)` / `SafeId(text)` | Make arbitrary text safe to drop into a spec. |
@@ -42,7 +44,8 @@ Plus a scripting namespace for generating specs from data:
 - **The diagram is live.** `nodeStates` / `edgeStates` recolor, relabel, badge, pulse and animate the
   diagram from tags without the spec text changing. A State Diagram with `activeState` bound to one tag
   shows the mode the machine is actually in; a Sequence Diagram with `activeStep` bound to a step tag
-  shows which message of a handshake is under way.
+  shows which message of a handshake is under way; a Gantt Chart's now line follows the clock across the
+  plan, with each task's live state and progress on its bar.
 - **Generated, not drawn.** Point `FromUdtStructure` at a tag folder and the equipment hierarchy draws
   itself. Feed `FlowFromDataset` a named query and the routing diagram comes from your data.
 - **Nothing to lay out.** A layered (Sugiyama-style) engine handles ranking, crossing reduction, chain
@@ -85,7 +88,7 @@ need something specific.
 
 ## Supported syntax
 
-Mermaid's flowchart, state-diagram and sequence-diagram syntax, drawn the way Mermaid means it. A spec pasted from the
+Mermaid's flowchart, state-diagram, sequence-diagram and gantt syntax, drawn the way Mermaid means it. A spec pasted from the
 Mermaid docs works; the little that has nothing to draw here is reported in `parse.warnings` rather than
 silently mangled.
 
@@ -158,6 +161,7 @@ silently mangled.
 - Activations: `activate X` / `deactivate X`, or the shorthand `A->>+B` (B activates) and `B-->>-A` (B
   deactivates). Nested activations stack.
 - Notes: `Note left of X: …`, `Note right of X: …`, `Note over X: …`, and `Note over A,B: …` across two
+  participants
 - Frames: `loop`, `alt` … `else`, `opt`, `par` … `and`, `critical` … `option`, `break`, each with its
   condition and closed by `end`, nested to any depth. `rect rgb(…)` shades the messages inside it.
 - `box Aqua Line 1` … `end` groups participants under a label and a colour
@@ -171,9 +175,35 @@ silently mangled.
 <img width="500" height="671" alt="A quality hold between a filler PLC, the MES and the QA lab, drawn with alt, critical, par and break frames" src="assets/Diagrams-12.png" />
 <img width="500" height="563" alt="Participant types, a box around the line's equipment, notes, and a lot record created mid-sequence and closed with a cross" src="assets/Diagrams-13.png" />
 
-A spec for another diagram kind (`gantt`, class, ER and the rest) is refused with an error in
+**`gantt`**
+
+- Tasks: `Name :tags, id, start, end`. The tags are `done`, `active`, `crit`, `milestone` and Mermaid 11's
+  `vert` (a vertical marker line across the chart rather than a bar); the id is optional.
+- A start is a date, `after a b` (when the last of those tasks ends), or left out: the task follows the
+  one before it. An `after` may name a task defined further down.
+- An end is a duration — `30m`, `4h`, `1.5h`, `2d`, `1w`, `1M`, `1y`, `500ms` — a date, or `until a` (when
+  that task starts).
+- `dateFormat` in dayjs tokens (`YYYY-MM-DD HH:mm`, `DD/MM/YYYY`, `X` for epoch seconds …). An ISO date
+  (`2026-10-01T06:00:00-04:00`) is read whatever the dateFormat says.
+- `axisFormat` in strftime directives (`%H:%M`, `%a %e %b`, `%-d`); left out, the labels are picked to suit
+  the tick spacing. `tickInterval 1day` / `6hour` / `1week` / `1month` sets the ticks; left out, they are
+  as fine as fits.
+- `excludes weekends`, day names or dates shade those days, and a duration stretches over them so it
+  counts working days. `includes` puts a date back; `weekend friday` makes the weekend Friday and
+  Saturday; `weekday monday` starts week ticks on Monday; `inclusiveEndDates` runs a bar through its end
+  date.
+- `section Name` bands the rows; `displayMode compact` (or `displayMode: compact` in the front matter)
+  lets tasks that don't overlap share a row.
+- `todayMarker off` hides the now line, and `todayMarker stroke:#0f0,stroke-width:3px` styles it;
+  `topAxis` puts the axis above the rows.
+- `title`, `click id href "/page"` / `click id call fn(args)`, `accTitle` / `accDescr`, `%%` comments,
+  and front matter (`---` / `title:` / `---`) before the diagram
+
+<img width="1016" height="365" alt="A line shutdown plan with mechanical, electrical and quality sections, the critical path in red, weekends shaded, a release milestone and a production restart marker" src="assets/Diagrams-15.png" />
+
+A spec for another diagram kind (class, ER, pie and the rest) is refused with an error in
 `parse.errors` that names the kind, rather than drawn as a flowchart of its keywords. A spec of one of
-the three kinds dropped into another kind's component still draws, with a note saying which component
+the four kinds dropped into another kind's component still draws, with a note saying which component
 suits it.
 
 ## Data & bindings
@@ -187,6 +217,8 @@ suits it.
 | Show the current mode | Bind the State Diagram's `activeState` to one string tag. |
 | A sequence from a message log | Bind a Sequence Diagram's `text` to `SequenceFromEvents(...)`. |
 | Show where a handshake is | Bind the Sequence Diagram's `activeStep` to the handshake's step tag. |
+| A schedule from a table | Bind a Gantt Chart's `text` to `GanttFromSchedule(...)`. |
+| The plan against the clock | Leave the Gantt Chart's `now` blank and switch on `ganttOptions.statusFromTime`; bind `nodeStates` for what is actually happening. |
 | Drill into a unit | Use the `onNodeClick` event — `event.id` is the node id from the spec. |
 
 Column names are matched loosely, so a query returning `source` / `target` / `label` needs no
@@ -198,7 +230,7 @@ works in any scope.
 
 ## Common properties
 
-All three components share these (the State and Sequence Diagrams add their own blocks below):
+The Flow, State and Sequence Diagrams share these (the State and Sequence Diagrams add their own blocks below; the Gantt Chart has its own set):
 
 | Prop | Notes |
 |---|---|
@@ -256,6 +288,50 @@ gap between two participants (columns also widen to fit the messages between the
 
 <img width="647" height="766" alt="A recipe download between an operator, the MES, the line PLC and the historian, with activeStep bound to a tag: the current message is lit blue, the earlier ones green" src="assets/Diagrams-11.png" />
 
+### Gantt Chart extras
+
+A Gantt chart lays its tasks along a time axis, so `direction`, `layout`, the edge options and
+`maxNodes` don't apply to it. `nodeStyle.fontSize` sizes the task and section names, `edgeStyle.fontSize`
+the axis labels.
+
+| Prop | Notes |
+|---|---|
+| `now` | The time the now line marks. Blank (default) = the browser's clock, moving every 30 seconds. Bind it to a date tag, an epoch-ms number or `'YYYY-MM-DD HH:mm'` text to follow the gateway's time or replay a schedule. |
+| `nodeStates[]` | Keyed by task id: what is actually happening against the plan. `state` replaces the look the task's tags give it; `progress` (0–100) fills that share of the bar; `label` renames it while the state holds (`Capper jammed` for `Capper running`); `value` follows the name — inside the bar as "name · value" when there's room — and always shows in the tooltip; plus `color`, `tooltip`, `pulse`, `badge`. |
+| `ganttOptions.showNow` | Draw the now line when now falls inside the schedule (default on). |
+| `ganttOptions.statusFromTime` | Mark tasks from the clock: ended by now is `done`, under way is `running` — for tasks the spec leaves untagged and `nodeStates` says nothing about (default off). |
+| `ganttOptions.displayMode` | `compact` or `default`, overriding the spec's; blank follows it. |
+| `ganttOptions.barHeight` | Bar height in px (default 22). |
+| `ganttOptions.chartWidth` | Width of the time area before fitting, in px; 0 (default) sizes it from the number of rows. |
+
+A schedule too wide to show whole at a readable zoom opens with now a quarter of the way in — what is
+running and what is next — or at its start when now is outside it.
+
+A plan is text, so a live number in it replans it. Here the changeover's length comes from an overrun
+tag, and everything chained `after` it moves when it does — the next lot, CIP, the release and the
+truck, which misses the carrier's cutoff once the overrun passes 45 minutes:
+
+```python
+# Binding on the Gantt Chart's text: a tag binding on the overrun (minutes), then this transform
+def transform(self, value, quality, timestamp):
+    overrun = int(value or 0)
+    return '\n'.join([
+        'gantt',
+        '    dateFormat YYYY-MM-DD HH:mm',
+        '    axisFormat %H:%M',
+        '    section Filler 1',
+        '    Lot 4471              :done, l1, 2026-10-01 06:00, 3h',
+        '    Changeover to 330 ml  :crit, co, after l1, {0}m'.format(45 + overrun),
+        '    Lot 4472              :l2, after co, 3h',
+        '    CIP                   :cip, after l2, 90m',
+        '    section Dispatch',
+        '    Truck 1 loading       :truck, after l2, 1h',
+        '    Carrier cutoff        :vert, cut, 2026-10-01 14:30, 0d',
+    ])
+```
+
+<img width="1016" height="381" alt="A filler schedule where a changeover running 60 minutes over has pushed the next lot, CIP and the truck to the right, and the truck now misses the carrier cutoff line" src="assets/Diagrams-14.png" />
+
 ## Events
 
 | Event | Payload |
@@ -265,6 +341,7 @@ gap between two participants (columns also widen to fit the messages between the
 | `onNodeClick` (State Diagram) | `id`, `label`, `classes`, `group`, `active` (true when it's the `activeState`), and `state` — the state as drawn: its `nodeStates` entry, else `active` / `done` from `activeState` / `visitedStates`, else `''`. A click on a composite state's box fires it too, with that composite's `id`. |
 | `onNodeClick` (Sequence Diagram) | A click on a participant: `id`, `label`, `shape`, `group` (the `box` it sits in: `__box1`, `__box2` … in spec order, or `''`), and `state` — `active` while it takes part in the `activeStep` message, else its `nodeStates` entry, else `''`. A participant with a `link` line also carries `link`. |
 | `onEdgeClick` (Flow and State) | `id`, `from`, `to`, `label`. |
+| `onNodeClick` (Gantt Chart) | A click on a task: `id`, `label`, `section`, `start` and `end` (`'YYYY-MM-DD HH:mm'` in the viewer's time), `startTime` and `endTime` (epoch ms), `tags` (done / active / crit / milestone), and `state` as drawn. A task with a `click` line adds `link`, or `callback` and `callbackArgs`. |
 | `onEdgeClick` (Sequence Diagram) | A click on a message: `id` (`m1`, `m2` …), `from`, `to`, `label`, `step` (the number `activeStep` matches), `active`, and `state` (`active`, `done`, or from `edgeStates`). Writing `event.step` to the step tag makes a click jump the handshake there. |
 
 `event.id` is the node id from the spec, so it matches the ids you use in `nodeStates`, and
@@ -297,7 +374,7 @@ Read-only, written back by the component — check these when a diagram renders 
 | Property | Contents |
 |---|---|
 | `parse` | `ok`, `errors[]` (each with a line number and message), `warnings[]` (unsupported constructs skipped, node cap hit). |
-| `stats` | `nodes`, `edges`, `ranks`, `width`, `height` — the laid-out size, handy for sizing a container. A Sequence Diagram reports `participants`, `messages`, `width`, `height`. |
+| `stats` | `nodes`, `edges`, `ranks`, `width`, `height` — the laid-out size, handy for sizing a container. A Sequence Diagram reports `participants`, `messages`, `width`, `height`; a Gantt Chart `tasks`, `sections`, `start`, `end`, `width`, `height`. |
 
 Writes only happen when the result actually changes, so they can't loop.
 
@@ -457,6 +534,40 @@ view's batch ID, and the diagram shows exactly what passed between the systems f
 Names that aren't already valid ids go through `SafeId` with the name kept as the label: `Line 1 PLC`
 becomes `participant Line_1_PLC as Line 1 PLC`, so key `nodeStates` by `Line_1_PLC`.
 
+### A schedule from the database
+
+`GanttFromSchedule` takes the shape a production schedule or a work-order list already has: what, in
+which section, when it starts, and when it ends or how long it takes. Real date columns keep their
+instant, so each task lands at its moment whatever time zone the operator's browser is in; dates given
+as text are drawn exactly as written.
+
+```python
+# Project library script: Diagrams
+def GetFillerSchedule(lineId):
+    orders = system.db.runPrepQuery('''
+        SELECT w.WorkOrder, w.Description AS task, w.Machine, w.PlannedStart AS startdate,
+               w.PlannedEnd AS enddate, w.DurationMinutes AS minutes, w.DependsOn, w.Status
+        FROM WorkOrder w
+        WHERE w.LineID = ? AND w.PlannedStart < DATEADD(day, 2, GETDATE())
+        ORDER BY w.PlannedStart
+    ''', [lineId])
+
+    return system.ectobox.diagrams.GanttFromSchedule(orders, title='Line {0}'.format(lineId), compact=True)
+```
+
+Bind the Gantt Chart's `text` to a transform that calls `Diagrams.GetFillerSchedule(value)` on the view's
+line ID, and switch on `ganttOptions.statusFromTime`: the chart is the plan, and the now line and the task
+colors say where the line should be on it.
+
+<img width="1016" height="370" alt="A shift's schedule with the now line at mid-morning: the first lot and the changeover finished in green, the next lot and the capper running in blue, CIP still to come" src="assets/Diagrams-16.png" />
+
+| Argument | Notes |
+|---|---|
+| `tasks` | Required. Columns (loosely matched): `name`/`task`/`label`/`title`, optional `id`/`workOrder`/`order`/`job`/`key`/`code`, `section`/`group`/`line`/`area`/`unit`/`machine`/`resource`, `start`/`startDate`/`begin`, `end`/`endDate`/`finish` or `duration`/`minutes` (a Mermaid duration such as `4h`, or a number of minutes), optional `after`/`dependsOn`/`predecessor` (ids or names, comma-separated) and `status`/`state`/`tags` (`done`, `complete`, `active`, `running`, `critical`, `milestone`). A task with no start follows the one before it; one with no end or duration is a milestone. A predecessor that isn't in the schedule is kept, so the chart warns about it instead of quietly moving the task. |
+| `title` | A title line. Default none. |
+| `excludes` | Days the schedule doesn't run: `"weekends"`, day names or dates. Default none. |
+| `compact` | Let tasks that don't overlap share a row within their section. Default `False`. |
+
 ### A diagram of your tag tree
 
 `FromUdtStructure` walks the live tag tree under a path — UDT instances labelled with their type,
@@ -525,7 +636,8 @@ The full set: `--ecto-diagram-node-fill`, `-node-stroke`, `-text`, `-sub-text`, 
 `-edge-muted`, `-group-fill`, `-group-stroke`, `-group-label`, `-plate` (the backing behind edge
 labels), and the `-control-bg` / `-control-border` of the zoom buttons. Sequence diagrams add
 `-lifeline`, `-activation-fill`, `-frame-stroke`, `-frame-tab`, `-frame-text`, `-seq-box-fill` and
-`-seq-rect-fill`.
+`-seq-rect-fill`; Gantt charts `-task`, `-task-done`, `-crit`, `-today` (the now line), `-grid`,
+`-section-a` / `-section-b` (the alternating bands) and `-excluded`.
 
 The semantic state colors are variables too, so one override recolors a state on every node and edge:
 
