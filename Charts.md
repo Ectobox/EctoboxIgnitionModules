@@ -245,17 +245,23 @@ script-driven alarm and the chart on the screen can never disagree. Available in
 scope (the Designer registration is what gives you autocomplete while you write).
 
 ```python
-weights = system.db.runQuery("SELECT fill_weight FROM fills ORDER BY ts")
+# A gateway timer script: check the filler's last shift of fill weights against limits frozen from
+# its first 25 containers, and hold the lot the moment the process goes out of control.
+fills = system.db.runNamedQuery('Filler/ShiftFillWeights', {'LineID': 1})
 
-r = system.ectobox.charts.spc.Analyze(weights, {
-        'valueColumn': 'fill_weight',
-        'limitMode':   'frozen',
+result = system.ectobox.charts.spc.Analyze(fills, {
+        'valueColumn':   'fillWeight',
+        'labelColumn':   'container',
+        'limitMode':     'frozen',
         'baselineCount': 25,
     })
 
-if not r['inControl']:
-    for v in r['violations']:
-        print "%s at %s: %s (%.2f)" % (v['ruleName'], v['label'], v['panel'], v['value'])
+if not result['inControl']:
+    first = result['violations'][0]
+    system.tag.writeBlocking(['[default]Line1/Filler01/LotHold'], [True])
+    system.util.getLogger('Line1.SPC').warn(
+        'Lot held: {0} on container {1} ({2:.2f} g, {3} panel)'.format(
+            first['ruleName'], first['label'], first['value'], first['panel']))
 ```
 
 | Function | Returns |

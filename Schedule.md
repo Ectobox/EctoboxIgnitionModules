@@ -53,7 +53,8 @@ different tradeoffs, leaning into drag-first interaction and information-dense c
 - **Move jobs between lanes** — drag a card from one piece of equipment to another (e.g. machine 4 is
   busy, so move the batch to machine 3), with **declarative rules** for what each lane will accept.
 - **Drop to create** — drag any object with at least an `ID` and `Name` onto the timeline and it
-  becomes a card; optional `StartDate`/`EndDate`/`Tags`/`Color`/`Type`/`Progress`/`Icon` are honored.
+  becomes a card; optional `StartDate`/`EndDate`/`DurationMinutes`/`Tags`/`Color`/`Type`/`Progress`/`Icon`
+  are honored (with no end, the card is `DurationMinutes` long, else an hour).
 - **Cards that communicate** — optional **badges** (type, owner, priority…), a **progress bar**, and a
   colored **left block with an icon** (Material, [Lucide](https://lucide.dev), or an image).
 - **State bands** — per-lane spans (running / idle / down / setup) painted behind the cards, plus
@@ -107,7 +108,7 @@ Hover any card for full details; right-click for a configurable menu:
 | Prop | Notes |
 |---|---|
 | `lanes` | Swim lanes. Each: `id`, `label`, `type`, `color`, `icon`, and optional `accept` rules (`types`, `eventIds`, `denyTypes`). |
-| `events` | Cards. Each: `id`, `laneId`, `name`, `start`, `end`, plus optional `color`, `type`, `badges`, `leftBlock`, `progress`, `movable`, `resizable`, `lockedToLane`, `badgePlacement`. |
+| `events` | Cards. Each: `id`, `laneId`, `name`, `start`, `end`, plus optional `color`, `type`, `badges`, `leftBlock`, `progress`, `movable`, `resizable`, `lockedToLane`, `badgePlacement`, and `durationMinutes` (how long the card lands when it's scheduled from the tray with no end). |
 | `laneStates` | Per-lane state spans behind the cards: `laneId`, `start`, `end`, `state`, `color`, `label`, `blocksDrop`. |
 | `globalBands` | Bands spanning all lanes (shifts/breaks): `start`, `end`, `label`, `color`, `opacity`, `blocksDrop`. |
 | `timeline` | `start`, `end`, `zoom` (month/day/12-hr/8-hr/6-hr/3-hr/hours/15-min/minutes), `snapMinutes`, `showCurrentTime`, `currentTime`. |
@@ -233,13 +234,20 @@ just durability — a failed write can be caught and surfaced without the UI eve
 
 ## Time & timezone
 
-Card **positions** are pure timestamps, so they're always correct. The one thing that's wall-clock —
-the axis labels, the day/month boundaries the gridlines snap to, and displayed times — is controlled by
-`timeZone`:
+`timeZone` says whose clock the schedule runs on. It sets the axis labels, the day/month boundaries the
+gridlines snap to and the times on cards — and it is the zone a time **without an offset** is read in:
 
 - **Empty (default):** the viewer's **browser** timezone.
-- **An IANA zone** (`America/New_York`, `Europe/Berlin`, `Asia/Tokyo`, …): the axis renders in that
+- **An IANA zone** (`America/New_York`, `Europe/Berlin`, `Asia/Tokyo`, …): everything renders in that
   zone, so every operator sees the same clock regardless of where their browser is.
+
+Times can arrive either way:
+
+- **Wall-clock**, no offset (`"2026-08-27T06:00:00"`) — the usual shape of a plant database's
+  `datetime` column. It means 06:00 *in `timeZone`*. Moves, resizes and drops are written back the same
+  way, so the handler that saves a move puts plant time back into the same column.
+- **An instant**, with an offset or `Z` (`"2026-08-27T10:00:00Z"`), or epoch milliseconds. It is the same
+  moment for everyone, and moves are written back as UTC instants.
 
 For a plant floor you almost always want a **fixed** zone rather than each browser's local time. The
 recommended setup is to bind `timeZone` to the Perspective session so it follows your gateway/session
