@@ -108,7 +108,7 @@ Hover any card for full details; right-click for a configurable menu:
 | Prop | Notes |
 |---|---|
 | `lanes` | Swim lanes. Each: `id`, `label`, `type`, `color`, `icon`, and optional `accept` rules (`types`, `eventIds`, `denyTypes`). |
-| `events` | Cards. Each: `id`, `laneId`, `name`, `start`, `end`, plus optional `color`, `type`, `badges`, `leftBlock`, `progress`, `movable`, `resizable`, `lockedToLane`, `badgePlacement`, and `durationMinutes` (how long the card lands when it's scheduled from the tray with no end). |
+| `events` | Cards. Each: `id`, `laneId`, `name`, `start`, `end`, plus optional `color`, `type`, `badges`, `leftBlock`, `progress`, `movable`, `resizable`, `lockedToLane`, `badgePlacement`, and `durationMinutes` (how long the card lands when it's scheduled from the tray with no end). `progress` is `{ enabled, value, color, showLabel, format, label }`: with `showLabel` the bar gets a label beside it, the `label` text if you give one (`"239 / 1,240 pcs"`), otherwise the value as `percent` (62%) or `integer` (62). |
 | `laneStates` | Per-lane state spans behind the cards: `laneId`, `start`, `end`, `state`, `color`, `label`, `blocksDrop`. |
 | `globalBands` | Bands spanning all lanes (shifts/breaks): `start`, `end`, `label`, `color`, `opacity`, `blocksDrop`. |
 | `timeline` | `start`, `end`, `zoom` (month/day/12-hr/8-hr/6-hr/3-hr/hours/15-min/minutes), `snapMinutes`, `showCurrentTime`, `currentTime`. |
