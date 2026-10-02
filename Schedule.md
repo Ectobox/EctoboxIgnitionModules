@@ -30,7 +30,11 @@ They cover two different situations — pick whichever fits, or use both:
   *existing* events that have no lane or start. Drag one onto a lane and it's **scheduled in place** —
   its lane and time are set, with **no duplicate** created. Best when your data already holds
   not-yet-scheduled work orders. Add `traySearch` (an operator search box) and a dev-side `trayFilter`
-  (`types` / `denyTypes` / `text`) to keep a large backlog manageable.
+  (`types` / `denyTypes` / `text`) to keep a large backlog manageable. A side tray is as tall as the lanes
+  beside it and scrolls its own list, and each card says what it is before you drag it: its color strip
+  and icon, run time, Type, Lane, **Fits** (the lanes whose accept rules take it), badges and progress.
+  `trayCard` picks those rows and adds your own from the event's fields; `trayWidth` / `trayHeight` size
+  the tray, and operators can drag its edge (`trayResizable`).
 
   <img width="150" height="261" alt="The unscheduled tray — a backlog of existing unscheduled jobs" src="assets/Schedule-9.png" />
 
@@ -111,10 +115,15 @@ Hover any card for full details; right-click for a configurable menu:
 | `events` | Cards. Each: `id`, `laneId`, `name`, `start`, `end`, plus optional `color`, `type`, `badges`, `leftBlock`, `progress`, `movable`, `resizable`, `lockedToLane`, `badgePlacement`, and `durationMinutes` (how long the card lands when it's scheduled from the tray with no end). `progress` is `{ enabled, value, color, showLabel, format, label }`: with `showLabel` the bar gets a label beside it, the `label` text if you give one (`"239 / 1,240 pcs"`), otherwise the value as `percent` (62%) or `integer` (62). |
 | `laneStates` | Per-lane state spans behind the cards: `laneId`, `start`, `end`, `state`, `color`, `label`, `blocksDrop`. |
 | `globalBands` | Bands spanning all lanes (shifts/breaks): `start`, `end`, `label`, `color`, `opacity`, `blocksDrop`. |
+| | A band's `label` shows inside it when the band is at least an eighth of the visible window (a global band's once, in the first lane), and as a tooltip otherwise. A `blocksDrop` band is hatched, so it reads as closed. |
 | `timeline` | `start`, `end`, `zoom` (month/day/12-hr/8-hr/6-hr/3-hr/hours/15-min/minutes), `snapMinutes`, `showCurrentTime`, `currentTime`. |
 | `navigation` | Built-in toolbar: `enabled` (prev / today / next + range label) and `showZoom`. Panning/zooming writes `timeline.start`/`end` back and fires `onRangeChanged`. |
 | `timeZone` | IANA zone (e.g. `America/New_York`) for the axis labels, day/month boundaries, and card times. Empty = the viewer's browser zone. **See [Time & timezone](#time--timezone).** |
 | `orientation` | `horizontal` (lanes are rows) or `vertical` (lanes are columns). |
+| `hourHeight` | Vertical only. `0` (default) fits the visible window to the component's height, as horizontal fits its width; above `0` it's px per hour and the calendar scrolls under the frozen lane headers. |
+| `trayPosition` / `traySearch` / `trayFilter` | Dockable unscheduled tray (`none`/`left`/`right`/`top`/`bottom`), an operator search box, and a dev-side `{ types, denyTypes, text }` filter. |
+| `trayWidth` / `trayHeight` / `trayResizable` | Tray size in px (side / top-bottom), and whether operators can drag its edge; the new size is written back. |
+| `trayCard` | What a tray card shows: `layout` (`detailed` or `compact`), `showType`, `showLane`, `showDuration`, `showFits`, `showBadges`, `showProgress` (all on by default), and `fields`: `[{ label, key }]` rows from the event's own data. |
 | `overlap` | `stack` (pack overlapping cards into sub-rows) or `reject` (refuse an overlapping move/drop). |
 | `addEnabled` / `moveEnabled` / `resizeEnabled` / `deleteEnabled` / `dropEnabled` | Toggle each interaction. |
 | `selectedEvent` / `selectedEvents` | The current selection, written back for your bindings. |
