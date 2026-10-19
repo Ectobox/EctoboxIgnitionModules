@@ -19,22 +19,20 @@ Everything in this repo is offered as-is, at no cost. If you find a module usefu
 | **Theme Editor** | A Perspective theme (CSS/JSON) editor that lives inside the Designer — syntax highlighting, CSS autocomplete, find/replace, and one-click refresh, with no filesystem access to the gateway required. | [ThemeEditor8.3.md](ThemeEditor8.3.md) | [v1.0.1](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Themes-Editor-8.3.modl) |
 | **Designer Helpers** | A catch-all for the little things — currently a one-click full project rescan and a graceful gateway restart. | [DesignerHelpers8.3.md](DesignerHelpers8.3.md) | [v1.0.6](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Helpers-8.3.modl) |
 
-### Perspective Components
+### Perspective Component Suite
 
-| Module | What it does | Docs | Download |
-|---|---|---|---|
-| **Alerts** | Script-invoked, session-global Perspective UI — stacking toasts, modal message boxes that return the user's choice, and full-screen loading overlays. Fire any of them from a single line of script; all CSS ships in the module, so there's nothing to add to a project theme. | [Alerts.md](Alerts.md) | [v1.0.23](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Alerts-8.3.modl) |
-| **Charts** | Twelve animated chart components — line, area, column, bar, scatter, bubble, pie, donut, gauge, sparkline, heatmap, and an SPC control chart — hand-drawn as crisp SVG (no charting library), with a curated palette and automatic light/dark theming. Plus `system.ectobox.charts.spc.*` for SPC analysis in Jython. | [Charts.md](Charts.md) | [v1.0.11](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Charts-8.3.modl) |
-| **Diagrams** | Mermaid-style flowcharts, state diagrams, sequence diagrams and Gantt charts written as plain text, laid out automatically, and rendered as crisp SVG — and live: bind node and edge state to tags so the diagram shows what the plant is doing right now. Plus `system.ectobox.diagrams.*` to generate diagrams from a query, a transition table, a message log, a schedule, or your tag tree. | [Diagrams.md](Diagrams.md) | [v0.1.17](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Diagrams-8.3.modl) |
-| **Drag List** | A sortable list-view component. Point it at a view and pass an array of instances (like a Flex Repeater), and users can drag to reorder rows at runtime — with the new order reported back to your scripts. | [DragList.md](DragList.md) | [v1.0.8](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Drag-List-8.3.modl) |
-| **Dropdown Button** | A Bootstrap-style dropdown button — a single trigger that opens a configurable popup menu. Great for a per-row "more actions" button in a table, where the menu never gets clipped by scrolling containers. | [DropdownButton.md](DropdownButton.md) | [v1.0.1](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Dropdown-Button-8.3.modl) |
-| **Schedule** | A modern equipment schedule / planner — a drag-first alternative to the built-in Equipment Schedule. Drag jobs between swim lanes (with per-lane accept rules), resize and multi-select, drop objects onto the timeline to create cards, and dress cards with badges, a progress bar, a colored icon block, and per-lane or plant-wide state bands. Curated palette, automatic light/dark, horizontal or vertical. | [Schedule.md](Schedule.md) | [v1.0.50](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Schedule-8.3.modl) |
+All of our Perspective controls in **one module**: one download, one install and one gateway restart. **[Download the suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)** · [PerspectiveComponentSuite.md](PerspectiveComponentSuite.md) (install, and moving from the separate modules)
 
-### Scripting
-
-| Module | What it does | Docs | Download |
-|---|---|---|---|
-| **Ecto Ignition Library** | Adds Ectobox scripting utilities to the `system.*` namespace — starting with proper rate-limiting (`debounce`, `throttle`, `cancel`, `flush`), with every function documented right in the Designer's autocomplete. | [EctoboxIgnitionLibrary.md](EctoboxIgnitionLibrary.md) | [v1.0.3](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/EctoIgnitionLib-8.3.modl) |
+| Control | What it does | Docs |
+|---|---|---|
+| **Datagrid** | A data grid that holds its own on a plant floor — bound data or millions of rows paged on the gateway, typed spreadsheet-style editing, calculated columns, trees, master-detail, live tag columns, group totals that add up, Excel/CSV/PDF export, and a Pivot Grid. | [Datagrid.md](Datagrid.md) |
+| **Alerts** | Script-invoked, session-global Perspective UI — stacking toasts, modal message boxes that return the user's choice, and full-screen loading overlays. Fire any of them from a single line of script; all CSS ships in the module, so there's nothing to add to a project theme. | [Alerts.md](Alerts.md) |
+| **Charts** | Twelve animated chart components — line, area, column, bar, scatter, bubble, pie, donut, gauge, sparkline, heatmap, and an SPC control chart — hand-drawn as crisp SVG (no charting library), with a curated palette and automatic light/dark theming. Plus `system.ectobox.charts.spc.*` for SPC analysis in Jython. | [Charts.md](Charts.md) |
+| **Diagrams** | Mermaid-style flowcharts, state diagrams, sequence diagrams and Gantt charts written as plain text, laid out automatically, and rendered as crisp SVG — and live: bind node and edge state to tags so the diagram shows what the plant is doing right now. Plus `system.ectobox.diagrams.*` to generate diagrams from a query, a transition table, a message log, a schedule, or your tag tree. | [Diagrams.md](Diagrams.md) |
+| **Drag List** | A sortable list-view component. Point it at a view and pass an array of instances (like a Flex Repeater), and users can drag to reorder rows at runtime — with the new order reported back to your scripts. | [DragList.md](DragList.md) |
+| **Dropdown Button** | A Bootstrap-style dropdown button — a single trigger that opens a configurable popup menu. Great for a per-row "more actions" button in a table, where the menu never gets clipped by scrolling containers. | [DropdownButton.md](DropdownButton.md) |
+| **Schedule** | A modern equipment schedule / planner — a drag-first alternative to the built-in Equipment Schedule. Drag jobs between swim lanes (with per-lane accept rules), resize and multi-select, drop objects onto the timeline to create cards, and dress cards with badges, a progress bar, a colored icon block, and per-lane or plant-wide state bands. Curated palette, automatic light/dark, horizontal or vertical. | [Schedule.md](Schedule.md) |
+| **Ecto Ignition Library** | Adds Ectobox scripting utilities to the `system.*` namespace — starting with proper rate-limiting (`debounce`, `throttle`, `cancel`, `flush`), with every function documented right in the Designer's autocomplete. | [EctoboxIgnitionLibrary.md](EctoboxIgnitionLibrary.md) |
 
 ---
 
@@ -43,7 +41,7 @@ Everything in this repo is offered as-is, at no cost. If you find a module usefu
 Every module installs the same way:
 
 1. Download the module's `.modl` file using the **Download** links above.
-2. In the Ignition Gateway, go to **Config → Modules** and click **Install or Upgrade a Module**.
+2. In the gateway's web interface, open the **Modules** page and click **Install or Upgrade a Module**.
 3. Upload the `.modl` file and restart the gateway or Designer if prompted.
 
 See each module's documentation (linked above) for specifics.
@@ -55,3 +53,5 @@ See each module's documentation (linked above) for specifics.
 These are passion projects, and feedback genuinely shapes where they go. If you hit a bug, have an idea, or just want to tell us how you're using something, please open an issue.
 
 For more about who we are and what we do, visit [ectobox.com](https://www.ectobox.com/).
+
+Using an AI assistant? [llms.txt](llms.txt) gives it a map of these docs.

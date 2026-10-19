@@ -1,6 +1,6 @@
 # Dropdown Button
 
-**⬇ [Download the latest module (v1.0.1)](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Dropdown-Button-8.3.modl)**
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Dropdown Button.
 
 A Bootstrap-style dropdown button for Ignition 8.3 Perspective. A single trigger button (a horizontal ellipsis by default) opens a popup menu of configurable items — ideal for a per-row "more actions" button in a table or grid, where Perspective has no good built-in answer.
 
@@ -10,9 +10,13 @@ The menu is rendered in a portal with fixed positioning, so it is **never clippe
 
 ## Install
 
-1. Download the latest `Dropdown-Button.modl` from the Releases page (or run `./gradlew build` and grab `build/Dropdown-Button.modl`).
-2. In the gateway, **Config → Modules → Install or Upgrade a Module** and pick the file.
+The Dropdown Button comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of Ectobox's Perspective controls.
+
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Dropdown Button** appears in the component palette under the **Ectobox** category.
+
+Had it installed as a module of its own? Uninstall that module and install the suite: your projects need no changes. See [Moving from the separate modules](PerspectiveComponentSuite.md#moving-from-the-separate-modules).
 
 ## Quick start
 

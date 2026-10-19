@@ -50,7 +50,7 @@ Plus a scripting namespace for generating specs from data:
   itself. Feed `FlowFromDataset` a named query and the routing diagram comes from your data.
 - **Nothing to lay out.** A layered (Sugiyama-style) engine handles ranking, crossing reduction, chain
   straightening and edge routing. You write what connects to what; it decides where things go.
-- **No third-party bundle.** No `mermaid`, no `dagre`, no charting library — same as the Charts module.
+- **No third-party bundle.** No `mermaid`, no `dagre`, no charting library — same as the Charts.
   Small, fast, and fully ours to shape.
 - **Automatic light/dark.** Nodes, edges, labels and group boxes follow the gateway theme with no
   per-theme setup, and every color is a CSS variable you can override.
@@ -62,9 +62,13 @@ Plus a scripting namespace for generating specs from data:
 
 ## Install
 
-1. Download **`Ectobox-Diagrams-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Diagrams-8.3.modl) list.
-2. Gateway → **Config → Modules → Install or Upgrade a Module** → pick the file (accept the Ectobox certificate on first install).
+Diagrams comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of Ectobox's Perspective controls.
+
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept the Ectobox certificate on first install), and restart the gateway when it asks.
 3. In the Designer, the diagram components appear in the palette under **Ectobox Diagrams**.
+
+Had it installed as a module of its own? Uninstall that module and install the suite: your projects need no changes. See [Moving from the separate modules](PerspectiveComponentSuite.md#moving-from-the-separate-modules).
 
 ## Quick start
 

@@ -83,9 +83,13 @@ Hover any card for full details; right-click for a configurable menu:
 
 ## Install
 
-1. Download **`Ectobox-Schedule-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Schedule-8.3.modl) list.
-2. Gateway → **Config → Modules → Install or Upgrade a Module** → pick the file (accept the Ectobox certificate on first install).
+Schedule comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of Ectobox's Perspective controls.
+
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept the Ectobox certificate on first install), and restart the gateway when it asks.
 3. In the Designer, the components appear in the palette under **Ectobox Schedule**.
+
+Had it installed as a module of its own? Uninstall that module and install the suite: your projects need no changes. See [Moving from the separate modules](PerspectiveComponentSuite.md#moving-from-the-separate-modules).
 
 ## Quick start
 
@@ -213,7 +217,7 @@ self.view.custom.events = events
 
 The schedule is **optimistic**: a drag, resize, add, or delete updates its own `events` prop
 immediately, so the UI never waits on a round-trip. To make those changes *stick*, bind `events` to
-something writable and save on the matching event — exactly like the Drag List module's reorder demo.
+something writable and save on the matching event — exactly like the Drag List's reorder demo.
 
 The simplest binding is a **view/session custom property** (survives while the session lives):
 

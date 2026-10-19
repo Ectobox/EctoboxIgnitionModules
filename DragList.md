@@ -1,14 +1,18 @@
 # Drag List
 
-**⬇ [Download the latest module (v1.0.8)](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Drag-List-8.3.modl)**
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Drag List.
 
 A sortable Perspective list-view component for Ignition 8.3. Like the built-in **Flex Repeater**, you point it at a view and pass an `instances` array to render one view per row — except in Drag List the user can drag rows to reorder them at runtime, and the new order is reported back to your scripts.
 
 ## Install
 
-1. Download the latest `Drag-List.modl` from the [Releases](../../releases) page (or run `./gradlew build` and grab `build/Drag-List.modl`).
-2. In the gateway, **Config → Modules → Install or Upgrade a Module** and pick the file.
+Drag List comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of Ectobox's Perspective controls.
+
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Drag List** appears in the component palette under the **Ectobox** category.
+
+Had it installed as a module of its own? Uninstall that module and install the suite: your projects need no changes. See [Moving from the separate modules](PerspectiveComponentSuite.md#moving-from-the-separate-modules).
 
 ## Quick start
 
