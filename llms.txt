@@ -1,12 +1,12 @@
 # Ectobox Ignition Modules
 
-> Free modules for Inductive Automation's Ignition 8.3 by Ectobox: the Ectobox Perspective Component Suite (Datagrid with Pivot Grid, Breadcrumb, Alerts, Charts, Diagrams, Drag List, Dropdown Button, Schedule and the Ecto Ignition Library, all in one module), and Designer tools (ScripTide, Theme Editor, Designer Helpers).
+> Free modules for Inductive Automation's Ignition 8.3 by Ectobox: the Ectobox Perspective Component Suite (Datagrid with Pivot Grid, Breadcrumb, Process Map, Alerts, Charts, Diagrams, Drag List, Dropdown Button, Schedule and the Ecto Ignition Library, all in one module), and Designer tools (ScripTide, Theme Editor, Designer Helpers).
 
 Key facts:
 
 - The Perspective controls ship as ONE module, the Ectobox Perspective Component Suite (module id `com.ectobox.perspective.suite`, file `Ectobox-Perspective-Component-Suite-8.3.modl`). It replaces the separate Datagrid, Alerts, Charts, Diagrams, Drag List, Dropdown Button, Schedule and Ecto Ignition Library modules; projects need no changes when moving to it.
 - Install: gateway web interface → Modules page → Install or Upgrade a Module, then restart. Uninstall any of the old separate modules on the same page first.
-- Perspective component types: `ectobox.datagrid.grid`, `ectobox.datagrid.pivot`, `ectobox.navigation.breadcrumb`, `ectobox.display.alert-host`, `ectobox.chart.line|area|column|bar|scatter|bubble|pie|donut|gauge|sparkline|heatmap|control`, `ectobox.diagram.flow|state|sequence|gantt`, `ectobox.layout.draglist`, `ectobox.input.dropdownbutton`, `ectobox.schedule.timeline`, `ectobox.schedule.drag-source`.
+- Perspective component types: `ectobox.datagrid.grid`, `ectobox.datagrid.pivot`, `ectobox.navigation.breadcrumb`, `ectobox.process.map`, `ectobox.display.alert-host`, `ectobox.chart.line|area|column|bar|scatter|bubble|pie|donut|gauge|sparkline|heatmap|control`, `ectobox.diagram.flow|state|sequence|gantt`, `ectobox.layout.draglist`, `ectobox.input.dropdownbutton`, `ectobox.schedule.timeline`, `ectobox.schedule.drag-source`.
 - Script functions: `system.ectobox.datagrid.*` (ApplyChanges, ToXlsx, ToCsv, ToPdf, EvaluateFormula), `system.ectobox.alerts.*` (ShowToast, ShowMessageBox, ShowLoading, CloseLoading), `system.ectobox.charts.spc.*`, `system.ectobox.diagrams.*`, `system.ectobox.rate.*` (debounce, throttle, cancel, flush).
 - Everything is free and offered as-is. Questions and bugs: GitHub issues on Ectobox/EctoboxIgnitionModules.
 
@@ -15,6 +15,7 @@ Key facts:
 - [Ectobox Perspective Component Suite](https://raw.githubusercontent.com/Ectobox/EctoboxIgnitionModules/main/PerspectiveComponentSuite.md): what is in the suite, installing it, and moving from the separate modules
 - [Datagrid and Pivot Grid](https://raw.githubusercontent.com/Ectobox/EctoboxIgnitionModules/main/Datagrid.md): data grid with bound or gateway-paged rows, typed editing, calculated columns and their formula language, trees, master-detail, live tag columns, totals, Excel/CSV/PDF export; the Pivot Grid, in the browser or totalled in the database
 - [Breadcrumb](https://raw.githubusercontent.com/Ectobox/EctoboxIgnitionModules/main/Breadcrumb.md): pick an asset by its place in the plant (up, sideways, down) from an asset table, the tag tree or a list, with status dots from a column, a UDT member or active alarms
+- [Process Map](https://raw.githubusercontent.com/Ectobox/EctoboxIgnitionModules/main/ProcessMap.md): belts and pipes, silos, bins, tanks, mixers, pumps, valves, motors, fans, exchangers, ISA instrument balloons, machines, buildings and any icon (including uploaded symbol libraries) with live states, laid out by how they connect (each item builds on a parent at its end, start or part way along), fitting any screen; states from tags, UDT members, alarms or bindings
 - [Alerts](https://raw.githubusercontent.com/Ectobox/EctoboxIgnitionModules/main/Alerts.md): toasts, message boxes and loading overlays fired from any script
 - [Charts](https://raw.githubusercontent.com/Ectobox/EctoboxIgnitionModules/main/Charts.md): twelve SVG chart components and SPC analysis functions
 - [Diagrams](https://raw.githubusercontent.com/Ectobox/EctoboxIgnitionModules/main/Diagrams.md): flowchart, state, sequence and Gantt diagrams written as text (Mermaid-style), live from tags

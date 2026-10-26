@@ -7,6 +7,7 @@ restart, instead of eight.
 |---|---|---|
 | **Datagrid** and **Pivot Grid** | A data grid for real plant data: bound or gateway-paged rows, typed editing, calculated columns, trees, live tags, totals, Excel/CSV/PDF export, and a pivot grid. | [Datagrid.md](Datagrid.md) |
 | **Breadcrumb** | Pick an asset by its place in the plant: up, sideways and down in one click, from your asset table or the tag tree, with status dots. | [Breadcrumb.md](Breadcrumb.md) |
+| **Process Map** | Belts, pipes, silos, tanks, pumps, valves, instruments and machines with live states, laid out by how they connect, so one map fits a wall screen and a phone. | [ProcessMap.md](ProcessMap.md) |
 | **Alerts** | Toasts, message boxes and loading overlays, fired from any script. | [Alerts.md](Alerts.md) |
 | **Charts** | Twelve animated SVG charts, including an SPC control chart. | [Charts.md](Charts.md) |
 | **Diagrams** | Flowcharts, state, sequence and Gantt diagrams written as text, live from tags. | [Diagrams.md](Diagrams.md) |
@@ -58,7 +59,7 @@ need no changes.
   the Modules page.
 - **Saved Datagrid layouts carry over.** Each user's column layout is kept in the gateway's internal database, and the
   suite reads it from the same place.
-- **One startup line.** The suite logs `Ectobox Perspective Component Suite started: 9 controls.` instead of each
+- **One startup line.** The suite logs `Ectobox Perspective Component Suite started: 10 controls.` instead of each
   control's own startup lines. If one control ever fails to start, the line names it and the others still run.
 - **Pages reload once.** As after any module change, open Perspective sessions reconnect after the restart and pick up
   the new module.

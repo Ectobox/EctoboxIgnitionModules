@@ -1,0 +1,12 @@
+{
+  "scope": "G",
+  "description": "Process symbols, P&ID / ISO 10628-2 style (Ectobox): 51 symbols.",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "config.json",
+    "library.svg"
+  ],
+  "attributes": {}
+}
