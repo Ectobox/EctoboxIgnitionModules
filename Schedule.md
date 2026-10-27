@@ -248,7 +248,7 @@ just durability — a failed write can be caught and surfaced without the UI eve
 ## Time & timezone
 
 `timeZone` says whose clock the schedule runs on. It sets the axis labels, the day/month boundaries the
-gridlines snap to and the times on cards — and it is the zone a time **without an offset** is read in:
+gridlines snap to, the date in the toolbar and the times on cards — and it is the zone a time **without an offset** is read in:
 
 - **Empty (default):** the viewer's **browser** timezone.
 - **An IANA zone** (`America/New_York`, `Europe/Berlin`, `Asia/Tokyo`, …): everything renders in that
@@ -271,7 +271,9 @@ timeZone  ⟵  binding (property)  session.props.timeZone
 ```
 
 That way a schedule authored in one timezone reads correctly for everyone, and daylight-saving shifts
-are handled for you.
+are handled for you: on the day the clocks change, that day is 23 or 25 hours long on the axis, and the ticks
+stay on 12am, 6am, 12pm and 6pm. A wall-clock time inside the hour the spring change skips (02:30) is read as
+the hour before it, so keep plant times out of that hour or send them with their offset.
 
 ## Data integrity
 
