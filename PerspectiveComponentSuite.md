@@ -9,7 +9,7 @@ restart, instead of eight.
 | **Breadcrumb** | Pick an asset by its place in the plant: up, sideways and down in one click, from your asset table or the tag tree, with status dots. | [Breadcrumb.md](Breadcrumb.md) |
 | **Process Map** | Belts, pipes, silos, tanks, pumps, valves, instruments and machines with live states, laid out by how they connect, so one map fits a wall screen and a phone. | [ProcessMap.md](ProcessMap.md) |
 | **Alerts** | Toasts, message boxes and loading overlays, fired from any script. | [Alerts.md](Alerts.md) |
-| **Charts** | Twelve animated SVG charts, including an SPC control chart. | [Charts.md](Charts.md) |
+| **Charts** | Sixteen animated SVG charts, including an SPC control chart, a state timeline, a Sankey, a mind map and a timeline. | [Charts.md](Charts.md) |
 | **Diagrams** | Flowcharts, state, sequence and Gantt diagrams written as text, live from tags. | [Diagrams.md](Diagrams.md) |
 | **Drag List** | A list the user reorders by dragging. | [DragList.md](DragList.md) |
 | **Dropdown Button** | One button that opens a menu of actions. | [DropdownButton.md](DropdownButton.md) |
