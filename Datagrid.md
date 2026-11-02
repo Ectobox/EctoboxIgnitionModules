@@ -322,7 +322,7 @@ always use the real value: a yield of 0.9452 shown as 94.5% copies into Excel as
 | `format.units` | Text after the number: `pcs`, `kg`, `°C`. |
 | `format.currency` | Currency code for `currency` (default `USD`). |
 | `format.dateStyle` | `auto`, `date`, `datetime`, `time`, `relative` (5 min ago), `iso` or `custom`. |
-| `format.datePattern` | For `custom`: a pattern like `system.date.format` uses, such as `EEE HH:mm`. |
+| `format.datePattern` | For `custom`: a pattern like `system.date.format` uses, such as `EEE HH:mm`. Excel and PDF exports show it too; CSV writes the whole date and time (`yyyy-MM-dd HH:mm:ss`), because CSV is data for the next program. |
 | `format.durationStyle` | Durations: `auto`, `clock` (1:02:05) or `words` (1h 2m 5s). |
 | `format.durationUnit` | What a value of 1 means: `milliseconds`, `seconds` (default), `minutes` or `hours`. |
 | `format.nullText` | Shown when there is no value, such as `—`. |
@@ -892,7 +892,10 @@ None). The source grid fires `onRowsDragOut` with `rows` and `target` (`{view, p
 Users can download the grid as an **Excel workbook**, a **CSV file** or a **PDF**: the rows as they see them,
 filtered, sorted and grouped, with the columns in their order and formats, header bands, group subtotals and the
 footer totals. Excel keeps numbers, dates and true/false as typed cells, so the sheet sums and charts like data typed
-into Excel. The PDF is laid out for printing: the title, column titles and header bands on every page, long text
+into Excel. Excel and PDF also colour cells by `style.rules`, in the light theme's colours (a rule's own `style` adds
+its background and text colours when they are plain colours such as `#E5484D`; theme variables and style classes
+can't go into a file). A CSV holds the data rows only: no group, footer or total rows, which a program reading it would
+take for data. The PDF is laid out for printing: the title, column titles and header bands on every page, long text
 wrapped, page numbers. In gateway mode, an export covers every matching row, not just the ones loaded. A tree exports
 every row with everything open.
 
@@ -1222,7 +1225,7 @@ cells; the header is bold and frozen, with AutoFilter.
 | Argument | Notes |
 |---|---|
 | `dataset` | The rows: a Dataset, such as from `system.db.runNamedQuery`. |
-| `columns` | Optional. A grid's column list (`grid.props.columns`) to take titles, number formats, lookup labels, widths and calculated columns from; hidden columns are left out. Leave it out to export every column as it is. |
+| `columns` | Optional. A grid's column list (`grid.props.columns`) to take titles, number and date formats, lookup labels, widths, calculated columns, `style.rules` colours and the `summary.footer` totals row from; hidden columns are left out. A field that isn't in the Dataset, a total the grid doesn't know (such as `avg` for `average`) or a rule that doesn't fit its column raises an error naming it. Leave it out to export every column as it is. |
 | `sheetName` | Optional. The worksheet's name (Excel allows 31 characters). Default `Sheet1`. |
 | `timeZone` | Optional. Dates are written as local times in this zone, such as `America/New_York`. Default: the gateway's. |
 
@@ -1247,21 +1250,23 @@ instead.
 ### `ToCsv(dataset, columns, delimiter, timeZone)`
 
 Makes CSV text from a Dataset: UTF-8 with the byte order mark Excel needs, quoted where needed, numbers at full
-precision with a dot, dates as `yyyy-MM-dd HH:mm:ss` local time, TRUE/FALSE, lookups as their labels. Text that a
-spreadsheet would run as a formula (starting with `=`, `+`, `-` or `@`) gets a leading `'` so it can't.
+precision with a dot, dates as `yyyy-MM-dd HH:mm:ss` local time whatever the column's date format, TRUE/FALSE, lookups
+as their labels, and no footer row. Text that a spreadsheet would run as a formula (starting with `=`, `+`, `-` or `@`)
+gets a leading `'` so it can't.
 
 | Argument | Notes |
 |---|---|
 | `dataset` | The rows: a Dataset. |
 | `columns` | Optional. A grid's column list, as for `ToXlsx`. |
-| `delimiter` | Optional. `,` (default), `;` (where Excel uses a decimal comma) or `tab`. |
+| `delimiter` | Optional. `comma` or `,` (default), `semicolon` or `;` (where Excel uses a decimal comma), `tab`, or any one character. The words are `export.csvDelimiter`'s. |
 | `timeZone` | Optional. The time zone dates are written in. Default: the gateway's. |
 
 ### `ToPdf(dataset, columns, title, paper, orientation, timeZone)`
 
 Makes a PDF from a Dataset and returns its bytes, laid out for printing or emailing: the title and when it was made at
 the top, the column titles (and header bands) on every page, long text wrapped, numbers and dates formatted as the
-grid formats them, and "Page n of m" at the bottom. At most 10,000 rows.
+grid formats them, cells coloured by the columns' `style.rules`, the footer totals row, and "Page n of m" at the bottom.
+At most 10,000 rows.
 
 | Argument | Notes |
 |---|---|
