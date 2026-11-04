@@ -10,6 +10,12 @@ restart, instead of eight.
 | **Process Map** | Belts, pipes, silos, tanks, pumps, valves, instruments and machines with live states, laid out by how they connect, so one map fits a wall screen and a phone. | [ProcessMap.md](ProcessMap.md) |
 | **Ribbon** | An Office-style command bar: tabs of grouped commands with Lucide icons that shrink to fit any screen, one event for every command, and state you can bind. | [Ribbon.md](Ribbon.md) |
 | **Speed Dial** | One round button that opens into a few actions, flying out on springs in a line, an arc or a ring you pick with a press, flick and release; one event for every pick. | [SpeedDial.md](SpeedDial.md) |
+| **Tabs** | A container that shows its contents a tab at a time, its tabs' contents binding to each other directly; labels never clipped, a More menu when they don't fit, counts, locks, close and drag, and a wizard with no strip. | [Tabs.md](Tabs.md) |
+| **Stepper** | The steps of a task: where the user is, what is done and what has a problem; linear steps that open only when the ones before are done, a fold to "Step 2 of 5" when it doesn't fit, and with a Tabs, a wizard. | [Stepper.md](Stepper.md) |
+| **Segmented Control** | One choice from a few, all in view, with a thumb that slides to the one picked; soft or solid in any tone, counts, icons only, and a touch size for panels. | [Segmented.md](Segmented.md) |
+| **Chips** | Pick one, tick several, type your own list (checked, unique, up to a max, in the order you drag) or show a status; chips pop in, shrink away and close up on a spring. | [Chips.md](Chips.md) |
+| **Badge** | A small status label or count (NEW, Paused, 12, 99+) or a status dot with words beside it that can pulse, alone, on its own icon, or on any component dropped into it; soft, solid or outline in any tone or your own colour, four sizes, clickable when asked. | [Badge.md](Badge.md) |
+| **Avatar** | A person as a picture or initials in their own stable colour (never red or amber), with a status dot and a count; a machine or site as a rounded tile; the name beside it; a group that folds to +3. | [Avatar.md](Avatar.md) |
 | **Alerts** | Toasts, message boxes and loading overlays, fired from any script. | [Alerts.md](Alerts.md) |
 | **Charts** | Sixteen animated SVG charts, including an SPC control chart, a state timeline, a Sankey, a mind map and a timeline. | [Charts.md](Charts.md) |
 | **Diagrams** | Flowcharts, state, sequence and Gantt diagrams written as text, live from tags. | [Diagrams.md](Diagrams.md) |
@@ -61,7 +67,7 @@ need no changes.
   the Modules page.
 - **Saved Datagrid layouts carry over.** Each user's column layout is kept in the gateway's internal database, and the
   suite reads it from the same place.
-- **One startup line.** The suite logs `Ectobox Perspective Component Suite started: 12 controls.` instead of each
+- **One startup line.** The suite logs `Ectobox Perspective Component Suite started: 18 controls.` instead of each
   control's own startup lines. If one control ever fails to start, the line names it and the others still run.
 - **Pages reload once.** As after any module change, open Perspective sessions reconnect after the restart and pick up
   the new module.
