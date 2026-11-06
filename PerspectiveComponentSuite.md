@@ -14,6 +14,10 @@ restart, instead of eight.
 | **Stepper** | The steps of a task: where the user is, what is done and what has a problem; linear steps that open only when the ones before are done, a fold to "Step 2 of 5" when it doesn't fit, and with a Tabs, a wizard. | [Stepper.md](Stepper.md) |
 | **Segmented Control** | One choice from a few, all in view, with a thumb that slides to the one picked; soft or solid in any tone, counts, icons only, and a touch size for panels. | [Segmented.md](Segmented.md) |
 | **Chips** | Pick one, tick several, type your own list (checked, unique, up to a max, in the order you drag) or show a status; chips pop in, shrink away and close up on a spring. | [Chips.md](Chips.md) |
+| **Search Select** | A search box that picks one value: every typed word must match the row (label, second line or hidden keywords), the best matches first; cards, groups and disabled rows; barcode scanners pick the row they name, even from another field; a search on the gateway for big lists. | [SearchSelect.md](SearchSelect.md) |
+| **Callout** | A message inside the page in a tone (info, good, warning, bad, neutral): an icon, a title and text with **bold** and `code`, actions that fire onAction, and an × that closes it (dismissed binds both ways). Soft, outline or edge, four sizes. | [Callout.md](Callout.md) |
+| **Side Navigation** | An app's menu down the left that fits the screen: full, a rail of icons, or hidden behind your hamburger, by the window's width or the user's choice. Opens pages by URL and follows the URL for the current item; counts, number keys 1 to 9, sections and sub-items; a search, folding sections and a rail by section for menus with dozens of pages; built for a shell page. | [SideNavigation.md](SideNavigation.md) |
+| **Stat Card** | One number that matters: a label, the number in its tone, a unit, a caption and an icon; the change against a previous value, green or red by which way is good; a sparkline; counts to a new value; clickable to filter a table. | [StatCard.md](StatCard.md) |
 | **Badge** | A small status label or count (NEW, Paused, 12, 99+) or a status dot with words beside it that can pulse, alone, on its own icon, or on any component dropped into it; soft, solid or outline in any tone or your own colour, four sizes, clickable when asked. | [Badge.md](Badge.md) |
 | **Avatar** | A person as a picture or initials in their own stable colour (never red or amber), with a status dot and a count; a machine or site as a rounded tile; the name beside it; a group that folds to +3. | [Avatar.md](Avatar.md) |
 | **Alerts** | Toasts, message boxes and loading overlays, fired from any script. | [Alerts.md](Alerts.md) |
@@ -67,7 +71,7 @@ need no changes.
   the Modules page.
 - **Saved Datagrid layouts carry over.** Each user's column layout is kept in the gateway's internal database, and the
   suite reads it from the same place.
-- **One startup line.** The suite logs `Ectobox Perspective Component Suite started: 18 controls.` instead of each
+- **One startup line.** The suite logs `Ectobox Perspective Component Suite started: 22 controls.` instead of each
   control's own startup lines. If one control ever fails to start, the line names it and the others still run.
 - **Pages reload once.** As after any module change, open Perspective sessions reconnect after the restart and pick up
   the new module.
