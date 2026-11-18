@@ -49,6 +49,11 @@ whose `ID` **already matches an unscheduled event** in `events` schedules *that*
 new `ID` creates a fresh card. Bind the Drag Source's `chips` to your unscheduled items and it behaves
 like the tray, with your own layout.
 
+Tray cards and Drag Source chips drag by mouse, touch or pen. A mouse drags once it has moved 4 px. A finger or pen
+holds still for 300 ms before the chip lifts, so a swipe still scrolls the tray or the page. A press on a field or
+button never starts a drag, Escape puts the chip back, and the Schedule scrolls itself when you hold a chip near its
+edge. The chip and the Schedule must be on the same page: a chip can't be dragged into another browser window.
+
 ## Highlights
 
 The built-in Equipment Schedule is a capable component that fits many jobs well — this one just makes
