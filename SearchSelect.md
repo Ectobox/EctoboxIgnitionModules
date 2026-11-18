@@ -17,6 +17,8 @@ traces a finished part by its serial number among hundreds of thousands.
 - **Too many rows for the browser?** `search` server asks the gateway after a pause in typing: one search per word, not
   per key, and an answer that arrives late is dropped.
 - The list opens in a layer above the page, so no container clips it, and above the box when there is no room below.
+  It draws the first 200 matches and counts the rest ("1,800 more: type to narrow the list"), so a local list of
+  thousands stays quick.
 
 <img width="1400" height="800" alt="Search Select example: housing line 3 typed into a work order box, the list of cards open with Line 3's open order first and the finished orders greyed with DONE badges, the matched words highlighted" src="assets/SearchSelect-1.png" />
 
@@ -93,7 +95,7 @@ within `scanGap` (30 ms) of the last, then Enter, make a scan; people type 80 ms
 |---|---|
 | `off` | Nothing special: it is typing. |
 | `box` (default) | A scan into this box fires `onScan` and picks the one row it names exactly (value, label or a keyword). None, or several, open the list on the code for a person to choose. |
-| `page` | The same for a scan typed anywhere on the page: with the cursor in another field (a quantity box keeps its 20), or in none. The keys go back into that field if no Enter follows (a fast typist, not a scanner). With several boxes on `page`, the one used last hears it. |
+| `page` | The same for a scan typed anywhere on the page: with the cursor in another field (a quantity box keeps its 20), or in none. The keys go back into that field if no Enter follows (a fast typist, not a scanner). With several boxes on `page`, the one used last hears it. A password field is never read. |
 
 With `search` server, a scan asks the gateway at once and picks when the answer comes.
 
@@ -132,7 +134,8 @@ not black.
 
 The list opens when the box takes the focus, showing every row with the picked one marked; the first key filters.
 Down and Up move, skipping disabled rows; Page Down and Page Up move a list's height; Enter picks; Escape and Tab close it
-and put the picked label back. The chevron opens and closes the list. Screen readers hear a combo box and its list of
+and put the picked label back. The chevron opens and closes the list, and a click in the box opens it again after
+Escape or a pick. Screen readers hear a combo box and its list of
 options.
 
 ## See it working

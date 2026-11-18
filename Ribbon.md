@@ -137,6 +137,10 @@ the rightmost goes first; a group of icons only (Font) folds last. Once every gr
 don't fit go into a **…** menu. A wider ribbon is never drawn smaller than a narrower one, and every command stays
 reachable.
 
+The tab bar fits the same way. Tabs that don't fit go behind a **More tabs** button after the last tab shown, in their
+order; pick one there to open it. The selected tab always shows. When even it alone is too wide beside the button, its
+name ends in an ellipsis, with the whole name as its tooltip.
+
 `layout` sets the shape: `classic` (tabs of groups), `simplified` (one row; what doesn't fit goes in **…**, the lowest
 priority from the right, and the groups' corner arrows go there too) or `auto` (one row below `simplifiedBelow`,
 480 px by default).

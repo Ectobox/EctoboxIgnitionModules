@@ -86,9 +86,12 @@ named-query binding or a scripted value. Each family maps columns a little diffe
 | Line / Area / Column / Bar | `mapping.xColumn` (category) + `mapping.series[]` (`column`, `name`, `color`). Empty = auto. |
 | Scatter / Bubble | `mapping.xColumn`, `mapping.series[]` (Y), plus `sizeColumn` (bubble) and optional `labelColumn`. |
 | Pie / Donut | `mapping.labelColumn` + `mapping.valueColumn`. |
-| Heatmap | `mapping.xColumn`, `mapping.yColumn`, `mapping.valueColumn`. |
-| Gauge | no data prop — bind the single **`value`** (plus `min`/`max`/`thresholds`). |
+| Heatmap | `mapping.xColumn`, `mapping.yColumn`, `mapping.valueColumn`. Rows with the same x and y are one cell holding their sum. A blank or null value leaves its cell empty, not 0. When every value is the same, the cells are drawn at full strength. |
+| Gauge | no data prop — bind the single **`value`** (plus `min`/`max`/`thresholds`). `arc.sweepAngle` is 270 by default (1 to 360); at 360 the gauge is a full ring, and `min` and `max` hang off a small V where it starts and ends. |
 | Sparkline | an array of numbers, or `valueColumn` on an array of objects. |
+
+In a Line, Area or Sparkline, a missing or blank value is a gap in the line, never 0. A reading with a gap on both
+sides shows as a dot.
 
 ## Theming & CSS
 
@@ -129,7 +132,9 @@ freshly-bound chart looks good immediately.
 ## Control charts (SPC)
 
 The **Control Chart** (`ectobox.chart.control`) is a real SPC chart, not a line chart with two extra
-lines on it. Drop it on a view, bind `data`, point `mapping.valueColumn` at your measurement, and you get:
+lines on it. Drop it on a view, bind `data`, point `mapping.valueColumn` at your measurement, and you get
+(left blank, it takes the first number column that isn't a timestamp, so a Tag History binding charts the tag, not
+`t_stamp`):
 
 - **Two stacked panels sharing one X axis** — Individuals on top, Moving Range beneath. Every variables
   control chart is a pair, and both panels' limits are computed from the same σ estimate.
@@ -227,7 +232,9 @@ Writes only happen when the computed answer actually changes, so they can't loop
 `output.writeBack = false` to turn them off and drive everything from events instead:
 
 - **`onRuleViolation`** — fires when the set of violations changes, *including back to empty*, so it can
-  both raise and clear an alarm. Payload: `violations`, `inControl`, `chartType`.
+  both raise and clear an alarm. A violation is the same one while its point (by label) and rule are, so new points
+  moving the limits, or the window sliding, don't fire it again. Payload: `violations`, `inControl`, `chartType`.
+  When the chart can't be computed (`error` set), `inControl` is false.
 - **`onPointClick`** — `index`, `label`, `panel`, `value`, and that point's `violations`.
 
 ### maxPoints
@@ -235,8 +242,9 @@ Writes only happen when the computed answer actually changes, so they can't loop
 Historian queries happily return thousands of rows, and an SVG with thousands of markers stops being
 usable, so `maxPoints` (default **200**) keeps the most recent N. Truncation is never silent: the title
 shows *"showing the last N of M observations"*, the browser console warns, and `results.truncated`
-reports it. Note that the limits and rule checks then describe **only the points shown** — set it to `0`
-for no cap.
+reports it. The rule checks then describe **only the points shown**, and so do computed limits. Frozen limits
+always come from their baseline in all the data, so they stay put as new points push old ones off the chart. Set it
+to `0` for no cap.
 
 ### Styling
 
@@ -337,7 +345,9 @@ EndTime, t_stamp, State, Reason…). A name that isn't a column is reported in t
 - **A value you didn't list is never hidden behind a made-up colour.** It's drawn grey with dots and named in the legend
   with a "!", so a new state from the PLC is seen the day it appears.
 - **No `states` at all?** The data's own values are used, and the usual words get their usual colours: Running and
-  Producing green, Down and Faulted red, Idle and Starved amber, Setup and Changeover blue.
+  Producing green, Down and Faulted red, Idle and Starved amber, Setup and Changeover blue. The data adds at most 100
+  states of its own; values past those are drawn as one, "Other values", and the Designer says it looks like an
+  analog tag.
 - **`pattern`** (`hatch`, `dots`) puts a texture over the fill, so the state reads without colour: for colour-blind
   operators and grey printouts.
 - **`severity`** decides which state wins where several share one pixel and in a line's roll-up. With none set, the rarer
@@ -355,8 +365,8 @@ A row with an empty end is still going: until the lane's next row, or until now 
 A 20-second stop on an 8-hour lane 1,000 px wide is under a pixel. Most charts drop it or draw a random sliver. Where a
 pixel column holds several stretches, the State Timeline draws it in the **most severe** state touching it, on top of the
 stretches either side. So 2,113 stops over two and a half weeks all show, and hovering a crowded column counts what's in
-it ("Unplanned stop ×2, 39m; Running ×3, 5h 52m"). Drag across the chart to zoom in on them; double-click to zoom out;
-**Reset zoom** goes back to the range you set. The new range is written to `range` and `onRangeChanged` fires.
+it ("Unplanned stop ×2, 39m; Running ×3, 5h 52m"). Drag across the chart to zoom in on them; double-click to zoom out
+(as far as 100 years); **Reset zoom** goes back to the range you set. The new range is written to `range` and `onRangeChanged` fires.
 
 Labels inside the bars show the whole state name and its duration when they fit, the name alone when only that fits,
 and nothing otherwise. A label is never cut ("Produci").
@@ -389,7 +399,11 @@ number. `summaryState` picks the state it reports, so `"Unplanned stop"` compare
 
 `live: true` runs each lane's current state to now, draws a line at **Now**, puts a dot by each lane's name in its state now,
 and leaves the rest of the range empty. It redraws every 15 seconds; poll your query for new rows. Set `range` to the shift
-so the empty part says how much of it is left.
+so the empty part says how much of it is left. Nothing is drawn past now: a change stamped up to a minute ahead (a
+gateway clock a little ahead of the screen's) counts as now.
+
+Not live with no `range.end`, a log of changes runs past its last change by a tenth of its span (at least 15 minutes,
+never past now), so the last state shows instead of ending at the moment it began.
 
 ### Events
 
@@ -534,7 +548,8 @@ deeper is text on an underline the branch runs into.
 **It never loses an idea.**
 - **Bad data is said in the Designer and drawn anyway:** an id used twice (the first is used), a row with no id, a parent
   that isn't in the data or is the row itself, a loop of parents (broken at one idea, which becomes a centre), a status
-  that isn't in `states`, a link to an id that isn't there.
+  that isn't in `states`, a link to an id that isn't there. The one exception: a map deeper than 200 levels (usually
+  `mapping.parentColumn` pointing at the wrong column) draws the first 200 and says how many rows below them it left out.
 - **Folding hides, it doesn't forget.** A folded branch's statuses still light its trail, and its links are drawn to the
   folded idea.
 - **Text stays readable.** A map too big for the component opens at a readable size, centred, to be dragged around;
@@ -606,7 +621,7 @@ clock, and when the data is dates they show only dates.
 | `now` | Marks now on the axis when it falls in the window, and draws events still to come with a dashed outline. |
 | `cardWidth` | Card width in px; 0 chooses it from the chart's width. |
 | `selected` | The event last clicked (its id), read and write: set it to ring an event from elsewhere. |
-| `zoom` | With time spacing: drag across the timeline to zoom in, double-click to zoom out, **Reset zoom** to go back. |
+| `zoom` | With time spacing: drag across the timeline to zoom in, double-click to zoom out (as far as 100 years), **Reset zoom** to go back. |
 
 **Cards never overlap, and no stem runs under another card.**
 - **Horizontal:** a card hangs from its stem and runs towards later times. Where cards would overlap, the earlier one

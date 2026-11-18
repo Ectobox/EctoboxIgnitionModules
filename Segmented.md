@@ -8,7 +8,9 @@ to six options a user should see at once: a report's period, a machine's mode, h
 - **One value.** `value` is the picked option's value; bind it both ways. A user's pick writes it and fires `onChange`;
   a binding's change moves the thumb and fires nothing.
 - **Fits any width.** `fit` makes each option as wide as its label; `stretch` shares the width. When it gets too narrow,
-  labels end in an ellipsis with the whole label as a tooltip. It never wraps.
+  labels end in an ellipsis with the whole label as a tooltip. It never wraps. When the options wouldn't fit even cut
+  to 56 px each, they keep their own widths and the row scrolls (wheel, swipe or arrow keys), with the picked option
+  brought into view.
 - **Built for panels.** A touch size of 48 px, icons from Lucide or any Ignition icon library, counts, and options a
   binding can disable.
 - **Moves like it means it.** The thumb travels on a spring, the same at any frame rate.

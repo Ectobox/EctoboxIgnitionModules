@@ -48,6 +48,12 @@ The first time it needs them, the service creates its tables in a schema named *
 `AndonMessages`, `AndonPhotos`, `AndonEvents` and `AndonSchemaVersions`. The settings are kept in the gateway's config
 files like any other setting.
 
+`AndonSchemaVersions` holds the version of the tables. Version 2 (suite 1.5.68) adds `AndonCalls.TakenByUser`: the
+user name of whoever took the call, so two responders with the same name are two people. Tables made by an older suite
+get the column the first time the service loads them, and calls taken before then are matched by name as before. The
+1.5.29 suite refuses version 2 tables ("made by a newer version of the module"): once 1.5.68 has used a database,
+1.5.29 can't use it.
+
 **Turning it off**: switch it off and Save, then choose **Keep** (the tables and photos stay, and turning it back on
 carries on where it left off) or **Remove** (type REMOVE: it drops only the tables it created, the schema too if it
 created it and it is empty, and deletes only the photos it named).
@@ -113,6 +119,9 @@ The gateway decides, never the browser:
 - Photos are checked as JPEGs (10 MB and 50 megapixels at most, read from the header before decoding), redrawn at most
   2400 px on the longest side (which drops EXIF, so no GPS position), kept with a 480 px thumbnail, and shown only to
   the session that asked, for an hour. Up to 20 photos a call.
+- A call's chat holds up to 500 messages written by people and scripts, photos included (the call's own lines, such as
+  taken or on my way, don't count). A session may send 10 messages at once, then one every 2 seconds; faster is
+  refused with "You're writing faster than the chat allows".
 
 ## What it costs
 

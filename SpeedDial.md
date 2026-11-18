@@ -105,12 +105,14 @@ once.
 | `trigger` | How it opens |
 |---|---|
 | `click` (default) | A click opens and closes it. |
-| `hover` | It opens as the pointer arrives and closes a moment after it leaves. |
+| `hover` | It opens as the pointer arrives and closes a moment after it leaves. A finger or pen taps it open, and it stays open. |
 | `hold` | Press and hold, flick toward an item, let go to pick it. A quick click opens it to look. Made for the ring. |
 
 - **`closeOnPick`** (on by default) closes the dial once an item is picked.
 - **`modal`** dims the page while the dial is open; a click on it closes the dial.
 - A press anywhere else closes it too.
+- **`enabled`** off greys the button so it won't open. Turned off while the dial is open, it closes and nothing can be
+  picked.
 
 ## Looks
 

@@ -113,7 +113,7 @@ current page whenever it is out of view.
 
 | Property | What it does |
 |---|---|
-| `items` | The menu, top to bottom. A row with `heading` (and no id) is a section heading. An item has `id`, `label`, `icon`, `badge` (a count: over 99 shows 99+, 0 none), `badgeTone`, `shortcut` (1 to 9), `path`, `view` and `params` (what Side Navigation Content shows), `keywords` (more words the search finds it by), `disabled` and `children` (one level of sub-items). A heading row's `icon` stands for its section in the rail. |
+| `items` | The menu, top to bottom. A row with `heading` (and no id) is a section heading. An item has `id` (empty: its label), `label`, `icon`, `badge` (a count: over 99 shows 99+, 0 none), `badgeTone`, `shortcut` (1 to 9), `path`, `view` and `params` (what Side Navigation Content shows), `keywords` (more words the search finds it by), `disabled` and `children` (one level of sub-items). A heading row's `icon` stands for its section in the rail. Ids are made unique: the first keeps its id, a repeated sub-item's becomes its parent's id, a slash and its label (`quality/Overview` for a second Overview under the `quality` item), and any other repeat takes a number (`Overview (2)`). |
 | `current` | The current item's id. Empty (the default) follows the URL: the item whose path is the longest match, so `/app/orders/41` keeps Work orders current. |
 | `currentItem` | Written by the menu: the current item's `id`, `label`, `path` and `view`. |
 | `mode` | `auto` (default): by the window's width. `expanded`, `rail` or `hidden`: always that. |
@@ -124,7 +124,7 @@ current page whenever it is out of view.
 | `railBelow`, `hiddenBelow` | The window widths for auto: 1100 and 768 px. |
 | `expandedWidth` | The expanded menu's width, 248 px by default (plus its 1 px border). The rail is 52, 56 or 64 px by density. |
 | `brand` | `name`, `logo` (an icon in a square of the menu's tone, or an image URL) and `site` (a short code in a chip). |
-| `allowHide` | The chevron beside the brand, and a click on the brand, hide the menu on any screen. On by default. |
+| `allowHide` | The chevron beside the brand, and a click on the brand, hide the menu on any screen. On by default. Offered only while a Side Navigation Button on the page can bring the menu back; a remembered hidden choice with no Button on the page is forgotten and the menu shown. |
 | `environment` | A switcher saying which plant or system this is (`onAction` id `environment`). |
 | `search`, `searchAfterPick` | `filter`: the search field (see Dozens of pages); after a pick it clears (default) or `keep`s the results. `action`: a Search button that fires `onAction` id `search` (also Ctrl K), for your own search. `off` (default). |
 | `sections`, `stickySections`, `railIcons` | Section headings `fold` (default), `one` open at a time or `fixed`; names stay at the top while scrolling (default); the rail by `items` (default) or `sections`. |
@@ -153,7 +153,7 @@ every icon sits in the same column expanded and in the rail, centred in the rail
 
 | Key | Does |
 |---|---|
-| 1 to 9 | Opens the item with that shortcut, from anywhere on the page but a text field. |
+| 1 to 9 | Opens the item with that shortcut, from anywhere on the page but a text field. A parent's shortcut opens its first sub-item that isn't disabled. |
 | Up, Down, Home, End | Move in the menu (Up from the first row goes back to the search field). |
 | Right, Left | Open an item's sub-items, close them (or go to the parent); open or fold a section on its name; open a section's flyout in the rail. |
 | Enter, Space | Open the item. |
@@ -164,7 +164,7 @@ every icon sits in the same column expanded and in the rail, centred in the rail
 
 | Event | When | Payload |
 |---|---|---|
-| `onNavigate` | The user picked an item (an item with a path has already opened it). | `id`, `label`, `path`, `how` (`click`, `key`, `shortcut` or `search`: Enter in the search field) |
+| `onNavigate` | The user picked an item (an item with a path has already opened it). Picking the current item again fires nothing and adds no history entry. | `id`, `label`, `path`, `how` (`click`, `key`, `shortcut` or `search`: Enter in the search field) |
 | `onAction` | Search, the environment, the user, or a footer button. | `id` |
 
 ## See it working

@@ -253,14 +253,17 @@ gridlines snap to, the date in the toolbar and the times on cards — and it is 
 - **Empty (default):** the viewer's **browser** timezone.
 - **An IANA zone** (`America/New_York`, `Europe/Berlin`, `Asia/Tokyo`, …): everything renders in that
   zone, so every operator sees the same clock regardless of where their browser is.
+- **A name the browser doesn't know** (a typo such as `America/Chicgo`, or `UTC+2`): the schedule still draws, in
+  the browser's zone, with a line above the lanes that says the zone is unknown.
 
 Times can arrive either way:
 
 - **Wall-clock**, no offset (`"2026-08-27T06:00:00"`) — the usual shape of a plant database's
   `datetime` column. It means 06:00 *in `timeZone`*. Moves, resizes and drops are written back the same
   way, so the handler that saves a move puts plant time back into the same column.
-- **An instant**, with an offset or `Z` (`"2026-08-27T10:00:00Z"`), or epoch milliseconds. It is the same
-  moment for everyone, and moves are written back as UTC instants.
+- **An instant**, with an offset or `Z` (`"2026-08-27T10:00:00Z"`), or an epoch number: a number is milliseconds;
+  numeric text of up to 11 characters is seconds, longer is milliseconds. It is the same moment for everyone, and
+  moves are written back as UTC instants.
 
 For a plant floor you almost always want a **fixed** zone rather than each browser's local time. The
 recommended setup is to bind `timeZone` to the Perspective session so it follows your gateway/session
@@ -272,8 +275,11 @@ timeZone  ⟵  binding (property)  session.props.timeZone
 
 That way a schedule authored in one timezone reads correctly for everyone, and daylight-saving shifts
 are handled for you: on the day the clocks change, that day is 23 or 25 hours long on the axis, and the ticks
-stay on 12am, 6am, 12pm and 6pm. A wall-clock time inside the hour the spring change skips (02:30) is read as
-the hour before it, so keep plant times out of that hour or send them with their offset.
+stay on 12am, 6am, 12pm and 6pm. A wall-clock time inside the hour the spring change skips (02:30) doesn't
+exist, so it is read an hour later (03:30). A wall-clock time in the hour the autumn change repeats (01:30) is
+read as the first 01:30. A card moved into the second 01:30 is written back with its offset
+(`"2026-11-01T01:30:00-05:00"`) so it keeps its place. `snapMinutes` snaps to the wall clock in `timeZone`
+(60 lands on the hour, 480 on 00:00, 08:00 and 16:00).
 
 ## Data integrity
 

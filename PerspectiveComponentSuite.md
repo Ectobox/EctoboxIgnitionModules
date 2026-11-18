@@ -19,6 +19,7 @@ restart, instead of eight.
 | **Side Navigation** | An app's menu down the left that fits the screen: full, a rail of icons, or hidden behind your hamburger, by the window's width or the user's choice. Opens pages by URL and follows the URL for the current item; counts, number keys 1 to 9, sections and sub-items; a search, folding sections and a rail by section for menus with dozens of pages; built for a shell page. | [SideNavigation.md](SideNavigation.md) |
 | **Stat Card** | One number that matters: a label, the number in its tone, a unit, a caption and an icon; the change against a previous value, green or red by which way is good; a sparkline; counts to a new value; clickable to filter a table. | [StatCard.md](StatCard.md) |
 | **Chat** | A conversation on a screen: mine on the right, theirs with a face and a name, day lines and system lines in a tone; quick replies; photos from a phone or tablet camera, shrunk before they are sent; a New line after the last one read; a sent message waits, faded, until your script stores it (Not sent, with Retry). A touch size for gloves and tablets. | [Chat.md](Chat.md) |
+| **Upload** | Files to the gateway, checked before they are sent and by content when they arrive: to a script in memory, to a folder, or a client's CSV or Excel file as rows the person checks before Import (problems by Excel row, columns matched by name). Drop, browse, paste cells from Excel, or take a photo. | [Upload.md](Upload.md) |
 | **Help Requests** | An andon: a Help Call on each station (topic and detail tiles, a note, photos), a Help Queue for responders (take, on my way, I'm here, running again in, done, chat) and a Help Board for the wall, with a gateway service that routes each call to a team, escalates when nobody takes it, and keeps calls in your database and photos as files. Dormant until you give it a database; or route calls through your own system with `source` props. | [HelpRequests.md](HelpRequests.md) |
 | **Badge** | A small status label or count (NEW, Paused, 12, 99+) or a status dot with words beside it that can pulse, alone, on its own icon, or on any component dropped into it; soft, solid or outline in any tone or your own colour, four sizes, clickable when asked. | [Badge.md](Badge.md) |
 | **Avatar** | A person as a picture or initials in their own stable colour (never red or amber), with a status dot and a count; a machine or site as a rounded tile; the name beside it; a group that folds to +3. | [Avatar.md](Avatar.md) |
@@ -28,7 +29,7 @@ restart, instead of eight.
 | **Drag List** | A list the user reorders by dragging. | [DragList.md](DragList.md) |
 | **Dropdown Button** | One button that opens a menu of actions. | [DropdownButton.md](DropdownButton.md) |
 | **Schedule** | A drag-first equipment schedule / planner. | [Schedule.md](Schedule.md) |
-| **Ecto Ignition Library** | `system.ectobox.rate`: debounce and throttle for scripts. | [EctoboxIgnitionLibrary.md](EctoboxIgnitionLibrary.md) |
+| **Ecto Ignition Library** | `system.ectobox.rate`: debounce and throttle for scripts. `system.ectobox.excel`: read Excel workbooks and CSV files into Datasets, and write them. | [EctoboxIgnitionLibrary.md](EctoboxIgnitionLibrary.md) |
 
 Every control works exactly as it did as a module of its own: the same components in the Designer palette, the same
 properties and events, and the same `system.ectobox.*` script functions.
@@ -73,7 +74,7 @@ need no changes.
   the Modules page.
 - **Saved Datagrid layouts carry over.** Each user's column layout is kept in the gateway's internal database, and the
   suite reads it from the same place.
-- **One startup line.** The suite logs `Ectobox Perspective Component Suite started: 24 controls.` instead of each
+- **One startup line.** The suite logs `Ectobox Perspective Component Suite started: 25 controls.` instead of each
   control's own startup lines. If one control ever fails to start, the line names it and the others still run.
 - **Pages reload once.** As after any module change, open Perspective sessions reconnect after the restart and pick up
   the new module.

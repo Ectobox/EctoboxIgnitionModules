@@ -48,6 +48,16 @@ Had it installed as a module of its own? Uninstall that module and install the s
 
 Each row's view receives a `sortOrderID` param equal to its current 0-based display index. This is **always** injected at render time, regardless of whether the source data contains a `sortOrderID` field. Reorder a row → its `sortOrderID` updates immediately the next render.
 
+## Dragging
+
+Mouse, touch and pen all drag.
+
+- A mouse drags once it has moved 4 px, so a click on a row is still a click.
+- A finger or pen on a row (`dragHandle = "row"`) holds still for 300 ms before the row lifts. Moving first scrolls the page as usual. On the right strip (`rightStrip`) a finger drags at once.
+- A press on a field, a button, a link or another control in the row's view belongs to that control and never starts a drag.
+- Escape puts the row back where it was.
+- Within 40 px of the top or bottom of the area that scrolls the list, the list scrolls while you drag.
+
 ## Events
 
 ### `onItemsReordered`

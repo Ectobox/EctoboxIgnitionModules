@@ -139,6 +139,9 @@ Things to know:
   checked against the columns the query really returns. Text is compared ignoring case, the same as in bound mode.
 - **A stored procedure can't be wrapped in a query.** To page a stored procedure, call it from a library function and
   use function mode (below).
+- **The databases:** SQL Server, PostgreSQL, MySQL and Oracle (12c or later).
+- **One query takes at most 2,000 filter values.** A filter that needs more (a long list of ticked values) is refused with
+  a message asking to narrow it, rather than failing in the database.
 
 ### Filters into the query's own parameters
 
@@ -166,7 +169,9 @@ Some queries narrow their rows themselves: a table function such as
 
 The rows are right either way. A filter the parameter can't say (two statuses for a one-ID parameter, "starts with"
 for a `contains` parameter) is not passed; the grid applies that filter itself instead. A parameter with no filter
-gets null. A filter never replaces a parameter set in `source.parameters`.
+gets null. A filter never replaces a parameter set in `source.parameters`. In gateway mode a mapped parameter must be a
+Value parameter of the named query: a QueryString or Database parameter is refused with a message, because what a user
+types would go into the SQL or pick the connection.
 
 ### Function mode: your own data functions
 
@@ -252,7 +257,7 @@ def SelectDowntimePaged(skip=0, take=100, sortColumn='StartTime', sortDirection=
 | Key | Notes |
 |---|---|
 | `skip` / `take` | The arguments that take how many rows to skip and how many to return. |
-| `sortColumn` / `sortDirection` | The arguments that take the sort. Without them, columns don't sort. |
+| `sortColumn` / `sortDirection` | The arguments that take the sort. Without them, columns don't sort. Only one of the grid's columns (or a `sortNames` key) is passed. |
 | `directionWords` | The words `sortDirection` takes: `ASC/DESC`, `asc/desc` or `ascending/descending`. |
 | `sortNames` | When the function's sort names differ from the grid's fields: field → the name the function takes. |
 | `totalField` | The result column that holds the total number of matches (for example from `COUNT(*) OVER ()`). Without it, the scrollbar grows as pages arrive. |
@@ -270,7 +275,9 @@ on another column by a binding or a script is refused with a message, never sile
   scripts to a function defined in that script. `system.*` functions, Python built-ins, and anything a script merely
   imported are refused.
 - **Filters reach parameters only through `filterParameters`**, and never replace a parameter set in
-  `source.parameters`. Use `source.parameters` for what scopes the rows (a site, a customer).
+  `source.parameters`. Use `source.parameters` for what scopes the rows (a site, a customer), and bind those values
+  to something a browser can't write: a tag, a query or a script. A value bound to `view.custom`, a view parameter or
+  session props is whatever the browser last wrote there.
 - **Links only open web addresses.** A link cell whose address starts with something like `javascript:` is refused.
 - **Tags are read and written with the user's own tag security** (see [Live tag columns](#live-tag-columns)).
 
@@ -642,6 +649,8 @@ bottom. `editing.allowDelete` lets users delete rows (right-click → Delete Row
 
 **Set `source.keyField`.** With a key, edits are tied to the row's key, so they stay with the right row when the
 data refreshes or is re-sorted, and your scripts get the key as `key`. Without one, rows are matched by position.
+In gateway and function mode the key is required for saving: without it, `getChanges()` refuses every edit and delete
+(added rows still go through), each listed in its `refused` with the reason.
 
 ### Saving: cell by cell, or a reviewed batch
 
@@ -655,7 +664,9 @@ data refreshes or is re-sorted, and your scripts get the key as `key`. Without o
 | `onRowInsert` | A user finished an added row: moved off it with every required value. | `insertId`, `values` (by field). |
 | `onRowsDelete` | A user deleted rows. | `rows`, each `{row, key, rowData}`. |
 
-Dates reach your scripts as epoch milliseconds: `system.date.fromMillis` makes them dates for a query.
+Dates reach your scripts as epoch milliseconds: `system.date.fromMillis` makes them dates for a query. Once
+`onRowInsert` has fired, the added row can't be edited or deleted until the data refreshes, so refresh it in the
+script, as below.
 
 ```python
 # onCellCommit on a QC entry grid (editing.commit = cell, source.keyField = Lot)
@@ -689,13 +700,20 @@ self.refreshBinding('props.data')
 
 **`batch`: changes collect until a script saves them.** Each changed cell, added row and deleted row is marked, and
 nothing is written until your Save button runs. `editing.changes` holds what is pending (bind a label to
-`editing.changes.pending` for "3 changes not saved"). The component methods do the rest:
+`editing.changes.pending` for "3 changes not saved"). The browser writes `editing.changes`, so save what
+`getChanges()` returns instead: the gateway checks it against the view. The component methods do the rest:
 
 | Method | Does |
 |---|---|
-| `getChanges()` | The changes not yet accepted, as a dictionary: `pending` (a count), `inserts` (each `{insertId, values}`), `updates` (each `{row, key, changes, original, values}`) and `deletes` (each `{row, key}`). In an update, `changes` and `original` hold only the edited fields, new and old; `values` is the whole row as it is now. Dates are epoch milliseconds. |
+| `getChanges()` | The changes not yet accepted, as a dictionary: `pending` (a count), `inserts` (each `{insertId, values}`), `updates` (each `{row, key, changes, original, values}`) and `deletes` (each `{row, key, values}`, `values` being the row as the gateway holds it; in function mode, only the key). In an update, `changes` and `original` hold only the edited fields, new and old; `values` is the whole row as it is now. Dates are epoch milliseconds. `refused` lists what was left out, each `{kind, key, reason}` (`insertId` in place of `key` for an added row). |
 | `acceptChanges()` | The changes were saved: clear their marks. The values keep showing until the data is refreshed. |
 | `rejectChanges()` | Throw away every change not yet accepted; cells show the data again. |
+
+`getChanges()` gives only what the view allows. An update must change editable columns (not `newRowsOnly` ones) of a
+row the grid has, within the columns' rules (`required`, `min`/`max`, `maxLength`, `pattern`); in gateway mode the row
+is read again from the source query, so a row that has gone from it is refused. Added rows need `editing.allowAdd` and
+carry only their editable columns' values, and deletes need `editing.allowDelete`. Everything else goes into
+`refused` and is not saved.
 
 `system.ectobox.datagrid.ApplyChanges` turns a Save button into a few lines. It runs your delete, update and insert
 named queries for every changed row, deletes first, then changed rows, then added rows. Each query gets the **whole
@@ -734,7 +752,7 @@ and try again. A Discard button calls `grid.rejectChanges()`.
 
 | Prop | Contents |
 |---|---|
-| `selection.selectedRows` | The selected rows as objects, every data column included. |
+| `selection.selectedRows` | The selected rows as objects, every data column included. At most 10,000 rows; in gateway mode, selected rows not yet loaded in the browser are left out. |
 | `selection.activeCell` | The cell the keyboard is on: `row` (source row index), `rowIndex` (position as shown), `column` (field). |
 
 A selection is a property like any other, so another component can bind to it with no script. Here, clicking a line
@@ -832,7 +850,7 @@ self.props.data = rows + children
 | `detail.grid.data` | Every detail row, as an array of objects or a dataset. Each open row shows its own. |
 | `detail.grid.namedQuery` | Instead of `data`: a named query run for each opened row, with the row's `masterField` value in the parameter named `detailField`. At most 5,000 rows per row; the grid says when there are more. |
 | `detail.grid.masterField` | This grid's column the detail rows belong to, such as `ID`. |
-| `detail.grid.detailField` | The detail rows' column that holds it, such as `WorkOrderID`, and with `namedQuery`, the parameter's name. |
+| `detail.grid.detailField` | The detail rows' column that holds it, such as `WorkOrderID`, and with `namedQuery`, the parameter's name (a Value parameter: a QueryString or Database parameter is refused). |
 
 A detail grid is read-only, and live tag columns don't run in it. For editing or live tags under a row, put a Datagrid
 in a detail view.
@@ -865,7 +883,8 @@ name of its own, a type, and a path template with `{Field}` for each data column
 - **Writing back.** Turn on `editing.editable` and users can write the tag, one cell at a time. The value is checked
   against the column's rules (here 0 to 600) and the tag's write permission, and written with the user's security.
   A refused write shows the tag system's reason, such as a read-only tag. A tag write happens at once, so it can't be
-  undone, and paste and Delete leave tag cells alone.
+  undone, and paste and Delete leave tag cells alone. The gateway writes only the tag the column's `pathTemplate`
+  makes from that row as the gateway has it, so in gateway mode writing needs `source.keyField`.
 - **Cell states explain themselves.** A cell waiting for its first value, a row with no tag at its path, and a tag
   with bad quality each look different, with a tooltip saying why.
 - **Export** reads each exported row's tags at the moment of the export. A tag that isn't good exports blank.
@@ -897,7 +916,8 @@ its background and text colours when they are plain colours such as `#E5484D`; t
 can't go into a file). A CSV holds the data rows only: no group, footer or total rows, which a program reading it would
 take for data. The PDF is laid out for printing: the title, column titles and header bands on every page, long text
 wrapped, page numbers. In gateway mode, an export covers every matching row, not just the ones loaded. A tree exports
-every row with everything open.
+every row with everything open. A grid makes one export at a time: a second asked for before the first is done says so
+and makes nothing.
 
 | Key | Notes |
 |---|---|
@@ -1005,7 +1025,8 @@ By default the pivot totals the rows in `data`, in the browser. For a big table,
 - **Everything else works as in bound mode:** `filters` (they become part of the query), `exclude`, sorting by value,
   subtotals, the field panel and export.
 - **Drill-down asks the database.** Double-clicking a cell lists the rows behind it, up to 5,000, fetched for that
-  cell alone.
+  cell alone. A cell whose rows take more than 2,000 values to name (a shift over a long date range takes a range per
+  day) says so and asks for a narrower range.
 - **`parameters`** gives the named query's parameters (a site, a date range). Bind them for values that change. The
   query's own permissions apply.
 - **The databases:** SQL Server and PostgreSQL are tested; MySQL and Oracle are supported. Date grouping needs one of
@@ -1043,7 +1064,8 @@ is a member.
 hours.
 
 **Shifts.** For `dateGroup: shift`, list your shifts in `shifts` (each a `name` and the local `start` time, `HH:MM`,
-24-hour), or bind it to your shift table. A shift runs until the next one starts, past midnight too.
+24-hour), or bind it to your shift table. A shift runs until the next one starts, past midnight too. Left empty,
+the shifts are A 06:00, B 14:00 and C 22:00.
 
 **Filters.** `filters` decides which rows count before anything is totalled, with the same conditions as the
 Datagrid's filters.
@@ -1150,7 +1172,7 @@ Call these on the Datagrid from any script that can reach it, for example `self.
 | `getChanges()` | The edits not yet accepted (see [Saving](#saving-cell-by-cell-or-a-reviewed-batch)). |
 | `acceptChanges()` | Clear the marks of saved changes. |
 | `rejectChanges()` | Throw away every change not yet accepted. |
-| `addRow()` / `addRow(values)` | Add a row at the bottom, optionally with some values filled in: `addRow({'Line': 'Line 3', 'Shift': 'B'})`. `editing.allowAdd` need not be on for scripts. |
+| `addRow()` / `addRow(values)` | Add a row at the bottom, optionally with some values filled in: `addRow({'Line': 'Line 3', 'Shift': 'B'})`. `editing.allowAdd` need not be on for scripts, but in batch mode `getChanges()` passes added rows on only when it is. |
 | `deleteSelectedRows()` | Delete the selected rows, exactly as Ctrl+Delete does (needs `editing.allowDelete`). |
 | `expandAllGroups()` / `collapseAllGroups()` | Open or close every group. |
 | `clearFilters()` | Remove every filter and the search. |
@@ -1214,7 +1236,8 @@ Saves a grid's edits with your named queries (see [Saving](#saving-cell-by-cell-
 | `deleteQuery` | Named query path for a deleted row. Needed only when rows were deleted. |
 | `database` | Optional. The database connection the named queries use. When given, the whole save is one transaction. |
 
-Returns a dictionary of row counts: `deleted`, `updated`, `inserted`.
+Returns a dictionary of row counts: `deleted`, `updated`, `inserted`. What `getChanges()` left out (its `refused`)
+is not saved.
 
 ### `ToXlsx(dataset, columns, sheetName, timeZone)`
 

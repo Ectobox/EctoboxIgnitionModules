@@ -44,6 +44,11 @@ there's nothing to add to a project theme.
 The host is a **document-level singleton** for all three surfaces: dropping it more than once on a
 page can't produce duplicates (alerts dedupe by id), so it degrades gracefully if you over-place it.
 
+A toast, message box or loading message sent just before a script navigates still shows, through the next view's
+Alert Host. Each Alert Host, as it mounts, asks for what the session was sent in the last 10 seconds and shows what
+it hasn't shown yet. A message box already answered isn't shown again, and of the loading messages only the last
+counts, so the overlay ends as the script left it.
+
 ## Install
 
 Alerts comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of Ectobox's Perspective controls.

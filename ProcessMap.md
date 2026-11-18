@@ -160,7 +160,8 @@ Each item's state comes from its **`status`** (picked from a dropdown, or bound 
 holds its state (e.g. `State`), or leave the member blank to use the tag itself. The gateway reads only the tags the
 view's own items name, with the user's tag permissions, and only under `tags.rootPath` when it is set. With
 `tags.statusFromAlarms` on, an item's worst active alarm under its tag is shown over its status: High or Critical as a
-fault, Medium or Low as a warning.
+fault, Medium or Low as a warning. An item whose `tag` isn't a tag path (it starts with the provider,
+`[default]Line 1/Belt 2`), or lies outside `tags.rootPath`, isn't watched; the map's **!** mark names it in its tooltip.
 
 <img width="950" height="498" alt="A bottling line: six lanes of eight machines — Depalletizer to Palletizer — joined by short belts, each machine lit by its UDT's State tag: most running, some amber (running slow), three red with marks (faulted)" src="assets/ProcessMap-6.png" />
 

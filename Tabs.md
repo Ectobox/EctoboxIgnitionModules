@@ -67,7 +67,7 @@ tab, and `tabs[3].locked` bound to "the name is blank".
 
 | Property | What it does |
 |---|---|
-| `current` | The index of the open tab. Bind it both ways to drive the Tabs from elsewhere; a binding's change fires no event. |
+| `current` | The index of the open tab; -1 when none is open. Bind it both ways to drive the Tabs from elsewhere; a binding's change fires no event. |
 | `selection` | `auto` (default): a click opens the tab. `controlled`: a click only fires `onTabRequest`, and your script opens the tab by setting `current`, for checks only the gateway can make. |
 | `keepAlive` | `visited` (default): a tab's contents start the first time it is opened and keep running after, so typing survives switching away. `all`: every tab from the start. `none`: only the open tab's (they restart each time). |
 
@@ -87,7 +87,7 @@ A tab's own settings:
 | `placement` | `top` (default), `bottom`, `left`, `right`, or `none` (no strip: Back and Next, or a stepper, set `current`). |
 | `size` | `small` 33 px, `medium` 40 (default), `large` 49, `touch` 56 for panel screens and gloves. |
 | `sizing` | `fit` (default): each tab as wide as its label. `fill`: the tabs share the width equally. `fixed`: every tab `tabWidth` wide, a long label ending in "…" with the whole label as its tooltip. |
-| `overflow` | When the tabs don't fit: `menu` (default) puts the rest under **More**; `scroll` scrolls the strip, with arrows. |
+| `overflow` | When the tabs don't fit: `menu` (default) puts the rest under **More**; `scroll` scrolls the strip, with arrows. On the left or right the strip always scrolls. |
 | `color` | The colour of the open tab's line, fill or text. Blank uses the theme's accent. |
 
 Labels and counts are centred on their letters at every size, in the theme's own font. Light, dark and custom themes
@@ -101,7 +101,9 @@ work through Perspective's theme variables. When the operating system asks for r
 
 - **`closable`**: each tab shows an x, and Delete closes the focused tab. The tab leaves `tabs` and `onTabClose` fires;
   its contents are kept for if it comes back. A tab's own `closable` false pins it. Closing the open tab opens its
-  right-hand neighbour (or the left one).
+  right-hand neighbour (or the left one), passing over locked, disabled and hidden tabs; when no tab may open, none is
+  open (`current` -1). With `selection` `controlled`, closing the open tab leaves none open and fires `onTabRequest`
+  (`by` close) for the neighbour, so your script decides what opens.
 - **`reorderable`**: tabs can be dragged along the strip (the others slide out of the way), or moved with Alt and an
   arrow key. `tabs` is rewritten in the new order and `onTabReorder` fires.
 

@@ -97,7 +97,7 @@ about 100 to 300 KB), and onSend gives it to you as `image`, with its `width`, `
 ⚠️ **Store pictures as files, and put their URL in `image`.** A data: URI kept in a tag or a row travels with the
 conversation to every screen that shows it, picture and all. One message from the browser to Perspective can be at
 most 2,097,152 characters, and a bigger one closes the session. The chat makes a picture smaller until it fits, and says *Too big to send* if it
-still doesn't.
+still doesn't. A typed message too big to send stays in the box, to be cut and sent again.
 
 ## Settings
 

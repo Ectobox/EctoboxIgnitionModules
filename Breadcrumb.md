@@ -64,7 +64,7 @@ crumb's menu. Ids are compared as text, so a parent id of `"10"` finds the asset
 <img width="710" height="390" alt="A tags breadcrumb, Packaging › Line 05 › Lane 3, with the menu after Lane 3 open: eight machines, each with a green or amber dot from its State tag, and a box to type to find one" src="assets/Breadcrumb-2.png" />
 
 Only what is on screen is browsed and watched — the crumbs and the menu you open — so a plant of 50,000 machines costs
-no more than one of 50.
+no more than one of 50. A folder with more than 5,000 levels in it lists the first 5,000, and its menu says so.
 
 ## Status dots
 
@@ -143,7 +143,7 @@ The arrow that goes down a level is never squeezed out: however narrow the bread
 | `appearance.size` | `compact` for dense desktop screens, `normal`, or `touch`: every crumb, separator and menu row at least 44 px, for HMI screens and gloved fingers. |
 | `appearance.showIcons` / `showStatus` | Show the assets' icons (`iconField`, an icon path per row) and the status dots. |
 | `appearance.filterAt` | A menu with at least this many entries gets a box to type into. Typing narrows any menu. |
-| `home` | The first crumb: `show`, `label` (blank = icon only), `icon`, `tooltip`. Its menu lists the top level; with status on, its dot is the worst of the top level (tags mode: the root's own). |
+| `home` | The first crumb: `show`, `label` (blank = icon only), `icon`, `tooltip`. Its menu lists the top level; with status on, its dot is the worst of the top level (tags mode: the root's own). With `show` off and more than one top-level asset, a separator before the first crumb lists them. |
 
 Colours come from the Perspective theme, so light, dark and your own themes just work.
 
