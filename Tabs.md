@@ -1,6 +1,6 @@
 # Tabs
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Tabs.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Tabs.
 
 A container that shows its contents one tab at a time. Every tab's components sit in the same view, so a component on
 one tab binds straight to a component on another: no message handlers or session properties to carry what was picked
@@ -21,7 +21,7 @@ on the first tab to the third.
 The Tabs comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of
 Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Tabs** appears in the component palette under the **Ectobox** category.

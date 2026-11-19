@@ -1,6 +1,6 @@
 # Chips
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Chips.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Chips.
 
 Small labelled chips in one of four modes: pick one, tick several, type your own list, or show a status. The same
 control is a filter over a list, the recipients of a report, the order rows are grouped in, or how each pasted header
@@ -21,7 +21,7 @@ was matched.
 Chips come in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of
 Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Chips** appears in the component palette under the **Ectobox** category. Dropped on

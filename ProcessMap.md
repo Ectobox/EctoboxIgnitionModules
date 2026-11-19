@@ -1,6 +1,6 @@
 # Process Map
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Process Map.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Process Map.
 
 Belts and pipes, silos, bins, tanks, pumps, valves, instruments, machines and buildings with their live states, drawn
 by **how they connect** rather than where they sit. Each item builds on another: it starts at that item's end, its start, or part way along it, then goes a
@@ -20,7 +20,7 @@ direction for a length. So:
 The Process Map comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with
 all of Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Process Map** appears in the component palette under the **Ectobox** category.

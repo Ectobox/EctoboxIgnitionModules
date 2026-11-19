@@ -56,7 +56,7 @@ Perspective controls. See [PerspectiveComponentSuite.md](PerspectiveComponentSui
 from the separate Datagrid module.
 
 1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the
-   [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+   [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file, and
    accept the Ectobox certificate the first time.
 3. Restart the gateway when it asks.

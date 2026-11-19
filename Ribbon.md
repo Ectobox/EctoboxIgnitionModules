@@ -1,6 +1,6 @@
 # Ribbon
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Ribbon.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Ribbon.
 
 An Office-style command bar for Perspective: tabs of grouped commands, drawn with [Lucide](https://lucide.dev) icons,
 that shrink to fit any screen. You write the commands as a list; the ribbon lays them out, and as it narrows each group
@@ -25,7 +25,7 @@ give it the width it should have. It draws no title bar and takes nothing over.
 The Ribbon comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of
 Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Ribbon** appears in the component palette under the **Ectobox** category. Dropped

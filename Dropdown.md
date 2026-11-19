@@ -1,6 +1,6 @@
 # Dropdown
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Dropdown.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Dropdown.
 
 Pick from a list. By default there is no typing: open the list, or press a letter and the box jumps to the row it
 starts, as a computer's own lists do. Set `mode` to `combo` and the box takes typing to filter. The same control picks
@@ -30,7 +30,7 @@ the lines a report covers.
 Dropdown comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of
 Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer. **Dropdown** appears in the component palette under the **Ectobox** category four

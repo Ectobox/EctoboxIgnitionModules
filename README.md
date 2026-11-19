@@ -21,7 +21,7 @@ Everything in this repo is offered as-is, at no cost. If you find a module usefu
 
 ### Perspective Component Suite
 
-All of our Perspective controls in **one module**: one download, one install and one gateway restart. **[Download the suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)** · [PerspectiveComponentSuite.md](PerspectiveComponentSuite.md) (install, and moving from the separate modules)
+All of our Perspective controls in **one module**: one download, one install and one gateway restart. **[Download the suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)** · [PerspectiveComponentSuite.md](PerspectiveComponentSuite.md) (install, and moving from the separate modules)
 
 | Control | What it does | Docs |
 |---|---|---|

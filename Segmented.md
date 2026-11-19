@@ -1,6 +1,6 @@
 # Segmented Control
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Segmented Control.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Segmented Control.
 
 One choice from a few, all in view, with a thumb that slides to the one picked. Use it where a dropdown would hide two
 to six options a user should see at once: a report's period, a machine's mode, how to view a table.
@@ -22,7 +22,7 @@ to six options a user should see at once: a report's period, a machine's mode, h
 The Segmented Control comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module
 with all of Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Segmented Control** appears in the component palette under the **Ectobox**

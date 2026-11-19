@@ -1,6 +1,6 @@
 # Speed Dial
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Speed Dial.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes the Speed Dial.
 
 One round button that opens into a handful of actions. The items fly out on springs in a line, an arc or a ring,
 lean toward the pointer as it comes near, and squash when pressed: a control people press for fun.
@@ -22,7 +22,7 @@ out over the page, never clipped by the container the dial is in.
 The Speed Dial comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all
 of Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Speed Dial** appears in the component palette under the **Ectobox** category.

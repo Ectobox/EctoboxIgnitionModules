@@ -1,6 +1,6 @@
 # Help Requests
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Help Requests.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Help Requests.
 
 An andon for Perspective: a station asks for help (a machine problem, material, quality), the right team is told, they
 take it, talk to the station and close it, and if nobody takes it in time it escalates up a chain. Three controls and a
@@ -22,7 +22,7 @@ small gateway service:
 
 Help Requests come in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open **Services → Ectobox Help Requests → Settings** in the gateway's web interface and pick a database connection

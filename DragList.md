@@ -1,6 +1,6 @@
 # Drag List
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Drag List.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Drag List.
 
 A sortable Perspective list-view component for Ignition 8.3. Like the built-in **Flex Repeater**, you point it at a view and pass an `instances` array to render one view per row — except in Drag List the user can drag rows to reorder them at runtime, and the new order is reported back to your scripts.
 
@@ -8,7 +8,7 @@ A sortable Perspective list-view component for Ignition 8.3. Like the built-in *
 
 Drag List comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all of Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Drag List** appears in the component palette under the **Ectobox** category.
 

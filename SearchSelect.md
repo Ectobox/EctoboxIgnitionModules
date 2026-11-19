@@ -1,6 +1,6 @@
 # Search Select
 
-**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Search Select.
+**⬇ [Download the Ectobox Perspective Component Suite](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl)**, which includes Search Select.
 
 A search box that picks one value from a list. Type a few letters of anything on the row, or scan a barcode, and pick
 one. The same control picks the work order a line runs next, codes a stop, puts material in a storage location, or
@@ -27,7 +27,7 @@ traces a finished part by its serial number among hundreds of thousands.
 Search Select comes in the **[Ectobox Perspective Component Suite](PerspectiveComponentSuite.md)**, one module with all
 of Ectobox's Perspective controls.
 
-1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/download/modules/Ectobox-Perspective-Component-Suite-8.3.modl) list.
+1. Download **`Ectobox-Perspective-Component-Suite-8.3.modl`** from the [Releases](https://github.com/Ectobox/EctoboxIgnitionModules/releases/latest/download/Ectobox-Perspective-Component-Suite-8.3.modl) list.
 2. In the gateway's web interface, open the **Modules** page → **Install or Upgrade a Module** → pick the file (accept
    the Ectobox certificate on first install), and restart the gateway when it asks.
 3. Open a project in the Designer; **Search Select** appears in the component palette under the **Ectobox** category,
